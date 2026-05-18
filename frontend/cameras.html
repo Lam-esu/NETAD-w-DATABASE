@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cameras</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <h2>CCTV MONITORING</h2>
+        <p class="sidebar-subtitle">SYSTEM</p>
+
+        <ul>
+
+            <li>
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a class="active" href="cameras.html">
+                    Cameras
+                </a>
+            </li>
+
+            <li>
+                <a href="logs.html">
+                    Logs
+                </a>
+            </li>
+
+            <li>
+                <a href="admin.html">
+                    Users
+                </a>
+            </li>
+
+            <li>
+                <a href="settings.html">
+                    Settings
+                </a>
+            </li>
+
+            <li>
+                <button id="logoutBtn" class="logout-btn">
+                    Logout
+                </button>
+            </li>
+
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="page-header">
+            <h1>Cameras</h1>
+        </div>
+
+        <section class="camera-section">
+
+            <div class="camera-header">
+                <h2>Main CCTV Camera</h2>
+
+                <div class="camera-controls">
+                    <span class="live-badge">● LIVE</span>
+                </div>
+            </div>
+
+            <div class="main-camera-box">
+                <img src="/api/camera/stream" alt="Live CCTV Feed">
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/cameras.js"></script>
+
+</body>
+</html>

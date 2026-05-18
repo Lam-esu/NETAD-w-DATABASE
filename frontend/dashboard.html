@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <aside class="sidebar">
+
+        <h2>CCTV MONITORING</h2>
+        <p class="sidebar-subtitle">SYSTEM</p>
+
+        <ul>
+
+            <li>
+                <a class="active" href="dashboard.html">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="cameras.html">
+                    Cameras
+                </a>
+            </li>
+
+            <li>
+                <a href="logs.html">
+                    Logs
+                </a>
+            </li>
+
+            <li>
+                <a href="admin.html">
+                    Users
+                </a>
+            </li>
+
+            <li>
+                <a href="settings.html">
+                    Settings
+                </a>
+            </li>
+
+            <li>
+                <button id="logoutBtn" class="logout-btn">
+                    Logout
+                </button>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="page-header">
+
+            <h1>Dashboard</h1>
+
+        </div>
+
+        <div class="stats-grid">
+
+            <div class="card">
+
+                <div class="card-icon">
+                    💻
+                </div>
+
+                <div>
+
+                    <h3>Devices</h3>
+
+                    <p id="devicesCount">
+                        12
+                    </p>
+
+                    <span>
+                        Devices with access
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-icon green">
+                    📹
+                </div>
+
+                <div>
+
+                    <h3>Camera Status</h3>
+
+                    <p id="cameraStatus">
+                        ONLINE
+                    </p>
+
+                    <span>
+                        CCTV stream status
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-icon purple">
+                    👤
+                </div>
+
+                <div>
+
+                    <h3>Active Users</h3>
+
+                    <p id="activeUsers">
+                        5
+                    </p>
+
+                    <span>
+                        Currently online
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-icon orange">
+                    📋
+                </div>
+
+                <div>
+
+                    <h3>Logs Today</h3>
+
+                    <p id="logsToday">
+                        156
+                    </p>
+
+                    <span>
+                        Total activity logs
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <section class="camera-section">
+
+            <div class="camera-header">
+
+                <h2>
+                    Live Camera Feed
+                </h2>
+
+                <div class="camera-controls">
+
+                    <span class="camera-name">
+                        Main CCTV Camera
+                    </span>
+
+                    <span class="live-badge">
+                        ● LIVE
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="main-camera-box">
+
+                <img
+                    src="/api/camera/stream"
+                    alt="Live CCTV Feed"
+                >
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>
