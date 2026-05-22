@@ -510,7 +510,7 @@ def reset_user_password(user_id):
 @app.route("/api/settings/save", methods=["POST"])
 @admin_required
 def save_settings():
-
+    
     data = request.get_json() or {}
 
     auto_logout = data.get("auto_logout", "30")
@@ -523,11 +523,13 @@ def save_settings():
     return jsonify({
         "message": "Settings saved"
     })
-
+# INIT DATABASE ON STARTUP
+with app.app_context():
+    db.create_all()
 
 # INIT DB
 
-
+    
 @app.cli.command("init-db")
 def init_db():
     db.create_all()
@@ -537,11 +539,8 @@ def init_db():
 
 if __name__ == "__main__":
 
-    with app.app_context():
-        db.create_all()
-
     app.run(
-    host="0.0.0.0",
-    port=int(os.environ.get("PORT", 8000)),
-    debug=False
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8000)),
+        debug=False
 )
