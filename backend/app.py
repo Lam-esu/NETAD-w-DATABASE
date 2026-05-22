@@ -20,7 +20,7 @@ from camera import CameraService
 
 app = Flask(
     __name__,
-    static_folder="../frontend",
+    static_folder="frontend",
     static_url_path=""
 )
 
@@ -42,23 +42,31 @@ camera_service = CameraService(app.config["CAMERA_SOURCE"])
 
 app.after_request(add_security_headers)
 
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "ok",
+        "message": "Correct app.py is running"
+    })
+
+
 # =====================================================
 # FRONTEND ROUTES
 # =====================================================
 
 @app.route("/")
 def serve_login():
-    return send_from_directory("../frontend", "index.html")
+    return send_from_directory("frontend", "index.html")
 
 
 @app.route("/<path:filename>")
 def serve_frontend(filename):
-    safe_path = safe_join("../frontend", filename)
+    safe_path = safe_join("frontend", filename)
 
     if safe_path is None:
         return jsonify({"error": "Invalid file path"}), 400
 
-    return send_from_directory("../frontend", filename)
+    return send_from_directory("frontend", filename)
 
 # =====================================================
 # SETUP DEFAULT ADMIN
@@ -533,7 +541,7 @@ if __name__ == "__main__":
         db.create_all()
 
     app.run(
-        host="127.0.0.1",
-        port=int(os.environ.get("PORT", 8000)),
-        debug=False
-    )
+    host="0.0.0.0",
+    port=int(os.environ.get("PORT", 8000)),
+    debug=False
+)
