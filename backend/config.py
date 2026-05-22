@@ -3,11 +3,29 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-this")
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        "sqlite:///secure_cctv.db"
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace(
+        "postgres://",
+        "postgresql://",
+        1
     )
+
+class Config:
+    SECRET_KEY = os.environ.get(
+        "SECRET_KEY",
+        "fallback-secret"
+    )
+
+    SQLALCHEMY_DATABASE_URI = (
+        database_url
+        or "sqlite:///securecctv.db"
+    )
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    CAMERA_SOURCE = os.getenv("CAMERA_SOURCE", "")
+
+    CAMERA_SOURCE = os.environ.get(
+        "CAMERA_SOURCE",
+        0
+    )
