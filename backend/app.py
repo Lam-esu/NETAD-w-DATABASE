@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 import csv
 import io
 import os
-
+from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask import Flask, request, jsonify, session, Response, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import safe_join
@@ -24,12 +25,23 @@ app = Flask(
     static_url_path=""
 )
 
+app.wsgi_app = ProxyFix(
+    app.wsgi_app,
+    x_proto=1,
+    x_host=1
+)
+
 app.config.from_object(Config)
 
 # SESSION SECURITY
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["SESSION_COOKIE_SECURE"] = False
+
+# Railway HTTPS fix
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+
+# MUST be True for Railway HTTPS
+app.config["SESSION_COOKIE_SECURE"] = True
+
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 
 CORS(app, supports_credentials=True)
