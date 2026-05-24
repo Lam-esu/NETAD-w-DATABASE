@@ -110,7 +110,7 @@ async function addUser() {
 
     const password = document.getElementById("newPassword").value;
 
-    const role = document.getElementById("newRole").value;
+    const role = document.getElementById("newRole").value.trim().toLowerCase();
 
     if (!username || !email || !password) {
         alert("Please fill in all fields");
