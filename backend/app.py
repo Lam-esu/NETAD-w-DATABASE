@@ -294,12 +294,12 @@ def dashboard_stats():
     )
 
     return jsonify({
-        "camera_status": "ONLINE",
-        "online_cameras": 1,
-        "active_users": total_users,
-        "total_logs": total_logs,
-        "devices": total_users
-    })
+    "camera_status": "UNAVAILABLE" if camera_service is None else "ONLINE",
+    "online_cameras": 0 if camera_service is None else 1,
+    "active_users": total_users,
+    "total_logs": total_logs,
+    "devices": total_users
+})
 
 
 # CAMERA
