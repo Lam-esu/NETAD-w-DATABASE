@@ -161,10 +161,14 @@
             </div>
 
             <div class="main-camera-box">
+            <div class="camera-unavailable-box" id="cameraMessage">
+                    Camera unavailable in cloud deployment
+            </div>    
 
                 <img
-                    src="/api/camera/stream"
+                    id="liveFeed"
                     alt="Live CCTV Feed"
+                    style="display: none;"
                 >
 
             </div>
@@ -179,4 +183,26 @@
 <script src="js/dashboard.js"></script>
 
 </body>
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        const response = await fetch("/api/camera/status", {
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (data.status === "ONLINE") {
+            document.getElementById("cameraMessage").style.display = "none";
+
+            const feed = document.getElementById("liveFeed");
+            feed.style.display = "block";
+            feed.src = "/api/camera/stream";
+        }
+
+    } catch (error) {
+        console.error("Camera status error:", error);
+    }
+});
+</script>
 </html>

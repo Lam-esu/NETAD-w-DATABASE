@@ -25,7 +25,4 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    CAMERA_SOURCE = os.environ.get(
-        "CAMERA_SOURCE",
-        0
-    )
+    CAMERA_SOURCE = os.environ.get("CAMERA_SOURCE", "")

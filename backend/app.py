@@ -56,7 +56,16 @@ db.init_app(app)
 bcrypt.init_app(app)
 limiter.init_app(app)
 
-camera_service = CameraService(app.config["CAMERA_SOURCE"])
+camera_source = os.getenv(
+    "CAMERA_SOURCE",
+    app.config.get("CAMERA_SOURCE", "")
+)
+
+camera_service = (
+    CameraService(camera_source)
+    if camera_source
+    else None
+)
 
 app.after_request(add_security_headers)
 
@@ -309,6 +318,11 @@ def camera_stream():
         "Accessed CCTV stream"
     )
 
+    if camera_service is None:
+        return jsonify({
+            "error": "Camera unavailable in cloud deployment"
+        }), 503
+
     return Response(
         camera_service.generate_frames(),
         mimetype="multipart/x-mixed-replace; boundary=frame"
@@ -319,13 +333,18 @@ def camera_stream():
 @login_required
 def camera_status():
 
+    if camera_service is None:
+        return jsonify({
+            "camera": "Main CCTV Camera",
+            "status": "UNAVAILABLE"
+        })
+
     is_online = camera_service.connect()
 
     return jsonify({
         "camera": "Main CCTV Camera",
         "status": "ONLINE" if is_online else "OFFLINE"
     })
-
 
 # LOGS
 
