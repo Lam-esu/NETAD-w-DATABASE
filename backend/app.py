@@ -44,7 +44,13 @@ app.config["SESSION_COOKIE_SECURE"] = True
 
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 
-CORS(app, supports_credentials=True)
+CORS(
+    app,
+    supports_credentials=True,
+    origins=[
+        "https://web-production-e808b.up.railway.app"
+    ]
+)
 
 db.init_app(app)
 bcrypt.init_app(app)
