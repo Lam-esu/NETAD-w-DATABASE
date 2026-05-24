@@ -33,15 +33,11 @@ app.wsgi_app = ProxyFix(
 
 app.config.from_object(Config)
 
-# SESSION SECURITY
+IS_PRODUCTION = os.getenv("RAILWAY_ENVIRONMENT") is not None
+
 app.config["SESSION_COOKIE_HTTPONLY"] = True
-
-# Railway HTTPS fix
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-
-# MUST be True for Railway HTTPS
-app.config["SESSION_COOKIE_SECURE"] = True
-
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = IS_PRODUCTION
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 
 CORS(
