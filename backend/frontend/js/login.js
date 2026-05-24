@@ -1,50 +1,184 @@
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("login.js loaded");
+document.addEventListener(
+    "DOMContentLoaded",
 
-    const loginForm = document.getElementById("loginForm");
-    const message = document.getElementById("message");
+    function () {
 
-    if (!loginForm) {
-        console.error("loginForm not found");
-        return;
-    }
+        console.log(
+            "login.js loaded"
+        );
 
-    loginForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
+        const loginForm =
 
-        console.log("Login button clicked");
+        document.getElementById(
+            "loginForm"
+        );
 
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
+        const message =
 
-        try {
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            });
+        document.getElementById(
+            "message"
+        );
 
-            console.log("Login response status:", response.status);
+        if (
+            !loginForm
+        ) {
 
-            const data = await response.json();
-            console.log("Login response data:", data);
+            console.error(
+                "loginForm not found"
+            );
 
-            if (response.ok) {
-                message.textContent = "Login successful. Redirecting...";
-                window.location.assign("/dashboard.html");
-            } else {
-                message.textContent = data.error || "Login failed";
+            return;
+
+        }
+
+        loginForm
+        .addEventListener(
+
+            "submit",
+
+            async function (
+                e
+            ) {
+
+                e.preventDefault();
+
+                const username =
+
+                document
+                .getElementById(
+                    "username"
+                )
+
+                .value;
+
+                const password =
+
+                document
+                .getElementById(
+                    "password"
+                )
+
+                .value;
+
+                try {
+
+                    const response =
+
+                    await fetch(
+
+                        "/api/auth/login",
+
+                        {
+
+                            method:
+                            "POST",
+
+                            headers: {
+
+                                "Content-Type":
+
+                                "application/json"
+
+                            },
+
+                            credentials:
+                            "include",
+
+                            body:
+
+                            JSON.stringify(
+
+                                {
+                                    username,
+                                    password
+                                }
+
+                            )
+
+                        }
+
+                    );
+
+                    const data =
+
+                    await response
+                    .json();
+
+                    console.log(
+                        data
+                    );
+
+                    if (
+
+                        response.ok
+
+                    ) {
+
+                        // CACHE USER
+
+                        sessionStorage
+                        .setItem(
+
+                            "userRole",
+
+                            data.user.role
+
+                        );
+
+                        sessionStorage
+                        .setItem(
+
+                            "username",
+
+                            data.user.username
+
+                        );
+
+                        message.textContent =
+
+                        "Login successful";
+
+                        // FAST REDIRECT
+
+                        window.location.replace(
+
+                            "/dashboard.html"
+
+                        );
+
+                    }
+
+                    else {
+
+                        message.textContent =
+
+                        data.error ||
+
+                        "Login failed";
+
+                    }
+
+                }
+
+                catch (
+
+                    error
+
+                ) {
+
+                    console.error(
+                        error
+                    );
+
+                    message.textContent =
+
+                    "Server error";
+
+                }
+
             }
 
-        } catch (error) {
-            console.error("Login error:", error);
-            message.textContent = "Server error. Check Flask terminal.";
-        }
-    });
-});
+        );
+
+    }
+);
