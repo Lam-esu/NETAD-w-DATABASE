@@ -1,12 +1,16 @@
-window.addEventListener("load", async function () {
-    const cachedRole = sessionStorage.getItem("userRole");
+document.addEventListener("DOMContentLoaded", function () {
+    const role = sessionStorage.getItem("userRole");
 
-    if (cachedRole) {
-        applyRole(cachedRole);
-        setupLogout();
+    if (!role) {
+        checkSessionFromServer();
         return;
     }
 
+    applyRole(role);
+    setupLogout();
+});
+
+async function checkSessionFromServer() {
     try {
         const response = await fetch("/api/auth/me", {
             method: "GET",
@@ -27,29 +31,38 @@ window.addEventListener("load", async function () {
         setupLogout();
 
     } catch (error) {
-        console.error(error);
+        console.error("Auth check failed:", error);
         window.location.href = "/";
     }
-});
+}
 
 function applyRole(role) {
-    if (role !== "admin") {
-        document.querySelectorAll(".admin-only").forEach(item => {
-            item.style.display = "none";
-        });
+    const adminItems = document.querySelectorAll(".admin-only");
 
-        const page = window.location.pathname;
-
-        if (page.includes("logs.html") || page.includes("admin.html")) {
-            alert("Admin access only");
-            window.location.href = "/dashboard.html";
+    adminItems.forEach(item => {
+        if (role === "admin") {
+            item.style.display = "block";
+        } else {
+            item.remove();
         }
+    });
+
+    const page = window.location.pathname;
+
+    if (
+        role !== "admin" &&
+        (page.includes("logs.html") || page.includes("admin.html"))
+    ) {
+        window.location.href = "/dashboard.html";
+        return;
     }
 
     document.querySelectorAll(".sidebar a").forEach(link => {
         link.classList.remove("active");
 
-        if (window.location.pathname.includes(link.getAttribute("href"))) {
+        const href = link.getAttribute("href");
+
+        if (page.includes(href)) {
             link.classList.add("active");
         }
     });
