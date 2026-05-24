@@ -820,3 +820,193 @@ button:hover {
         height: 360px;
     }
 }
+
+/* =========================
+   RESPONSIVE UI FIXES
+   Laptop / Desktop / Wide Screens
+========================= */
+
+/* Make the whole layout flexible */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Sidebar stays fixed but not too large */
+.sidebar {
+    width: clamp(210px, 15vw, 260px);
+    flex-shrink: 0;
+}
+
+/* Main content adjusts based on screen width */
+.main-content {
+    flex: 1;
+    width: calc(100% - 260px);
+    padding: clamp(24px, 3vw, 48px);
+    overflow-x: hidden;
+}
+
+/* Dashboard cards adjust automatically */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+}
+
+/* Cards scale better */
+.stats-card,
+.card {
+    min-width: 0;
+    padding: clamp(18px, 2vw, 28px);
+}
+
+/* Make text scale better */
+.page-header h1 {
+    font-size: clamp(32px, 3vw, 52px);
+}
+
+.page-header p {
+    font-size: clamp(14px, 1vw, 18px);
+}
+
+.card-info h2,
+.card p {
+    font-size: clamp(26px, 2.5vw, 42px);
+}
+
+.card-info h4 {
+    font-size: clamp(12px, 0.9vw, 15px);
+}
+
+/* Camera box adapts to screen height */
+.camera-feed-container img,
+.camera-unavailable-box {
+    width: 100%;
+    height: clamp(420px, 60vh, 720px);
+}
+
+/* Large desktop screens */
+@media (min-width: 1600px) {
+    .main-content {
+        padding: 56px 64px;
+    }
+
+    .camera-feed-container img,
+    .camera-unavailable-box {
+        height: 680px;
+    }
+}
+
+/* Medium laptops */
+@media (max-width: 1300px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main-content {
+        padding: 36px 28px;
+    }
+
+    .camera-feed-container img,
+    .camera-unavailable-box {
+        height: 520px;
+    }
+}
+
+/* Small laptops / tablets */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        padding: 20px;
+    }
+
+    .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .sidebar li {
+        margin-bottom: 0;
+    }
+
+    .sidebar a {
+        padding: 10px 14px;
+    }
+
+    .logout-btn {
+        margin-top: 0;
+        width: auto;
+    }
+
+    .main-content {
+        width: 100%;
+        padding: 24px 18px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .camera-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .camera-feed-container img,
+    .camera-unavailable-box {
+        height: 360px;
+    }
+
+    .logs-toolbar,
+    .search-container,
+    .logs-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .logs-search input,
+    .logs-search button,
+    .export-btn {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 600px) {
+    .page-header h1 {
+        font-size: 30px;
+    }
+
+    .stats-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .camera-feed-container img,
+    .camera-unavailable-box {
+        height: 280px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    .users-table,
+    .logs-table {
+        min-width: 700px;
+    }
+
+    .logs-table-wrapper,
+    .admin-card {
+        overflow-x: auto;
+    }
+}
