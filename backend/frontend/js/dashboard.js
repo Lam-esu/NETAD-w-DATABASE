@@ -1,39 +1,43 @@
-const API_BASE = "http://127.0.0.1:8000";
+document.addEventListener("DOMContentLoaded", function () {
+    loadDashboardStats();
+});
 
-async function checkAuth() {
+async function loadDashboardStats() {
     try {
-        const response = await fetch(`${API_BASE}/api/auth/me`, {
+        const response = await fetch("/api/dashboard/stats", {
+            method: "GET",
             credentials: "include"
         });
 
         if (!response.ok) {
-            window.location.href = "/";
+            console.warn("Dashboard stats failed:", response.status);
             return;
         }
 
-        const user = await response.json();
-        console.log("Logged in as:", user.username);
+        const data = await response.json();
+
+        const devicesCount = document.getElementById("devicesCount");
+        const cameraStatus = document.getElementById("cameraStatus");
+        const activeUsers = document.getElementById("activeUsers");
+        const logsToday = document.getElementById("logsToday");
+
+        if (devicesCount) {
+            devicesCount.textContent = data.devices ?? 0;
+        }
+
+        if (cameraStatus) {
+            cameraStatus.textContent = data.camera_status ?? "UNAVAILABLE";
+        }
+
+        if (activeUsers) {
+            activeUsers.textContent = data.active_users ?? 0;
+        }
+
+        if (logsToday) {
+            logsToday.textContent = data.total_logs ?? 0;
+        }
 
     } catch (error) {
-        console.error(error);
-        window.location.href = "/";
+        console.error("Dashboard stats error:", error);
     }
 }
-
-async function logout() {
-    await fetch(`${API_BASE}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include"
-    });
-
-    localStorage.clear();
-    window.location.href = "/";
-}
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", logout);
-}
-
-checkAuth();
