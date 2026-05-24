@@ -138,32 +138,27 @@
 
         </div>
 
-        <section class="camera-section">
+        <section class="camera-section dashboard-camera-large">
 
             <div class="camera-header">
+                <h2>Live Camera Feed</h2>
 
-                <h2>
-                    Live Camera Feed
-                </h2>
-
-                <div class="camera-controls">
-
+                <div class="camera-badges">
                     <span class="camera-name">
                         Main CCTV Camera
                     </span>
 
-                    <span class="live-badge">
-                        ● LIVE
+                    <span class="live-badge" id="liveBadge">
+                        ● CHECKING
                     </span>
-
                 </div>
-
             </div>
 
-            <div class="main-camera-box">
-            <div class="camera-unavailable-box" id="cameraMessage">
-                    Camera unavailable in cloud deployment
-            </div>    
+            <div class="camera-feed-container">
+
+                <div class="camera-unavailable-box dashboard-camera-box" id="cameraMessage">
+                    Checking camera availability...
+                </div>
 
                 <img
                     id="liveFeed"
@@ -185,23 +180,55 @@
 </body>
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
+    const cameraMessage = document.getElementById("cameraMessage");
+    const liveFeed = document.getElementById("liveFeed");
+    const liveBadge = document.getElementById("liveBadge");
+    const cameraStatus = document.getElementById("cameraStatus");
+
     try {
         const response = await fetch("/api/camera/status", {
+            method: "GET",
             credentials: "include"
         });
 
+        if (!response.ok) {
+            cameraMessage.textContent = "Camera unavailable";
+            liveBadge.textContent = "● UNAVAILABLE";
+
+            if (cameraStatus) {
+                cameraStatus.textContent = "UNAVAILABLE";
+            }
+
+            return;
+        }
+
         const data = await response.json();
 
-        if (data.status === "ONLINE") {
-            document.getElementById("cameraMessage").style.display = "none";
+        if (cameraStatus) {
+            cameraStatus.textContent = data.status;
+        }
 
-            const feed = document.getElementById("liveFeed");
-            feed.style.display = "block";
-            feed.src = "/api/camera/stream";
+        liveBadge.textContent = "● " + data.status;
+
+        if (data.status === "ONLINE") {
+            cameraMessage.style.display = "none";
+
+            liveFeed.style.display = "block";
+            liveFeed.src = "/api/camera/stream";
+        } else {
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
         }
 
     } catch (error) {
         console.error("Camera status error:", error);
+
+        cameraMessage.textContent = "Camera unavailable";
+        liveBadge.textContent = "● UNAVAILABLE";
+
+        if (cameraStatus) {
+            cameraStatus.textContent = "UNAVAILABLE";
+        }
     }
 });
 </script>

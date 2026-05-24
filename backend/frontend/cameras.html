@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cameras</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div class="container">
@@ -29,17 +31,18 @@
             <li><a href="settings.html">Settings</a></li>
 
             <li>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
+                <button id="logoutBtn" class="logout-btn">
+                    Logout
+                </button>
             </li>
         </ul>
     </aside>
-
-        <script src="js/auth.js?v=2"></script>
 
     <main class="main-content">
 
         <div class="page-header">
             <h1>Cameras</h1>
+            <p>Monitor your connected CCTV camera</p>
         </div>
 
         <section class="camera-section">
@@ -47,13 +50,29 @@
             <div class="camera-header">
                 <h2>Main CCTV Camera</h2>
 
-                <div class="camera-controls">
-                    <span class="live-badge">● LIVE</span>
+                <div class="camera-badges">
+                    <span class="camera-name">
+                        Main CCTV Camera
+                    </span>
+
+                    <span class="live-badge" id="cameraPageBadge">
+                        ● CHECKING
+                    </span>
                 </div>
             </div>
 
-            <div class="main-camera-box">
-                <img src="/api/camera/stream" alt="Live CCTV Feed">
+            <div class="camera-feed-container">
+
+                <div class="camera-unavailable-box" id="cameraPageMessage">
+                    Checking camera availability...
+                </div>
+
+                <img
+                    id="cameraPageFeed"
+                    alt="Live CCTV Feed"
+                    style="display: none;"
+                >
+
             </div>
 
         </section>
@@ -62,8 +81,55 @@
 
 </div>
 
-<script src="js/auth.js?v=2"></script>
-<script src="js/cameras.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    const cameraMessage = document.getElementById("cameraPageMessage");
+    const cameraFeed = document.getElementById("cameraPageFeed");
+    const cameraBadge = document.getElementById("cameraPageBadge");
+
+    try {
+        const response = await fetch("/api/camera/status", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
+
+            cameraBadge.textContent =
+                "● UNAVAILABLE";
+
+            return;
+        }
+
+        const data = await response.json();
+
+        cameraBadge.textContent = "● " + data.status;
+
+        if (data.status === "ONLINE") {
+            cameraMessage.style.display = "none";
+
+            cameraFeed.style.display = "block";
+            cameraFeed.src = "/api/camera/stream";
+        } else {
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
+        }
+
+    } catch (error) {
+        console.error("Camera error:", error);
+
+        cameraMessage.textContent =
+            "Camera unavailable in cloud deployment";
+
+        cameraBadge.textContent =
+            "● UNAVAILABLE";
+    }
+});
+</script>
 
 </body>
 </html>

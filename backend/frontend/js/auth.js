@@ -18,6 +18,7 @@ async function checkSessionFromServer() {
         });
 
         if (!response.ok) {
+            console.warn("No valid session found");
             window.location.href = "/";
             return;
         }
