@@ -236,7 +236,8 @@ def login():
     session.permanent = True
     session["user_id"] = user.id
     session["username"] = user.username
-    session["role"] = user.role
+    session["role"] = user.role.strip().lower()
+    session.modified = True
 
     write_audit_log(user.username, "Logged in")
 
@@ -244,7 +245,7 @@ def login():
         "message": "Login successful",
         "user": {
             "username": user.username,
-            "role": user.role
+            "role": user.role.strip().lower()
         }
     })
 

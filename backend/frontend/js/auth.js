@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const role = sessionStorage.getItem("userRole");
+    const cachedRole = sessionStorage.getItem("userRole");
 
-    if (!role) {
-        checkSessionFromServer();
+    if (cachedRole) {
+        applyRole(cachedRole);
+        setupLogout();
         return;
     }
 
-    applyRole(role);
-    setupLogout();
+    checkSessionFromServer();
 });
 
 async function checkSessionFromServer() {
@@ -24,10 +24,12 @@ async function checkSessionFromServer() {
 
         const user = await response.json();
 
-        sessionStorage.setItem("userRole", user.role);
+        const role = String(user.role).trim().toLowerCase();
+
+        sessionStorage.setItem("userRole", role);
         sessionStorage.setItem("username", user.username);
 
-        applyRole(user.role);
+        applyRole(role);
         setupLogout();
 
     } catch (error) {
@@ -37,9 +39,9 @@ async function checkSessionFromServer() {
 }
 
 function applyRole(role) {
-    const adminItems = document.querySelectorAll(".admin-only");
+    role = String(role).trim().toLowerCase();
 
-    adminItems.forEach(item => {
+    document.querySelectorAll(".admin-only").forEach(item => {
         if (role === "admin") {
             item.style.display = "block";
         } else {
@@ -51,7 +53,10 @@ function applyRole(role) {
 
     if (
         role !== "admin" &&
-        (page.includes("logs.html") || page.includes("admin.html"))
+        (
+            page.includes("logs.html") ||
+            page.includes("admin.html")
+        )
     ) {
         window.location.href = "/dashboard.html";
         return;
@@ -62,7 +67,7 @@ function applyRole(role) {
 
         const href = link.getAttribute("href");
 
-        if (page.includes(href)) {
+        if (href && page.includes(href)) {
             link.classList.add("active");
         }
     });
@@ -76,10 +81,14 @@ function setupLogout() {
     logoutBtn.addEventListener("click", async function () {
         sessionStorage.clear();
 
-        await fetch("/api/auth/logout", {
-            method: "POST",
-            credentials: "include"
-        });
+        try {
+            await fetch("/api/auth/logout", {
+                method: "POST",
+                credentials: "include"
+            });
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
 
         window.location.href = "/";
     });
