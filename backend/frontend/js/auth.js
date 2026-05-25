@@ -18,13 +18,11 @@ async function checkSessionFromServer() {
         });
 
         if (!response.ok) {
-            console.warn("No valid session. Redirecting to login.");
             window.location.href = "/";
             return;
         }
 
         const user = await response.json();
-
         const role = String(user.role).trim().toLowerCase();
 
         sessionStorage.setItem("userRole", role);
@@ -42,13 +40,11 @@ async function checkSessionFromServer() {
 function applyRole(role) {
     role = String(role).trim().toLowerCase();
 
-    document.querySelectorAll(".admin-only").forEach(item => {
-        if (role === "admin") {
-            item.style.display = "block";
-        } else {
-            item.remove();
-        }
-    });
+    if (role === "admin") {
+        document.body.classList.add("is-admin");
+    } else {
+        document.body.classList.remove("is-admin");
+    }
 
     const page = window.location.pathname;
 
@@ -81,6 +77,7 @@ function setupLogout() {
 
     logoutBtn.addEventListener("click", async function () {
         sessionStorage.clear();
+        document.body.classList.remove("is-admin");
 
         try {
             await fetch("/api/auth/logout", {

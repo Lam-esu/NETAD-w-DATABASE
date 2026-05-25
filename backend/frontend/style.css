@@ -1275,3 +1275,13 @@ button:hover {
         font-size: 24px;
     }
 }
+
+/* HIDE ADMIN LINKS BY DEFAULT */
+.admin-only {
+    display: none;
+}
+
+/* SHOW ADMIN LINKS ONLY AFTER AUTH.JS CONFIRMS ADMIN */
+body.is-admin .admin-only {
+    display: block;
+}
