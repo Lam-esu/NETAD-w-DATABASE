@@ -1,72 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>CCTV MONITORING Login</title>
+    <title>Secure CCTV Login</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
 
-<body>
+<body class="login-page">
 
-<div class="login-container">
+    <div class="login-wrapper">
 
-    <div class="login-box">
+        <div class="login-card">
 
-        <h1>CCTV MONITORING System</h1>
+            <div class="login-header">
+                <div class="login-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 7h11v10H4V7Z"></path>
+                        <path d="M15 10l5-3v10l-5-3v-4Z"></path>
+                    </svg>
+                </div>
 
-        <form id="loginForm">
-
-            <div class="input-group">
-
-                <label for="username">
-                    Username
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Enter username"
-                    required
-                >
-               
+                <h1>CCTV MONITORING</h1>
+                <h2>System</h2>
+                <p>Sign in to access the website</p>
             </div>
 
-            <div class="input-group">
+            <form id="loginForm" class="login-form">
 
-                <label for="password">
-                    Password
-                </label>
+                <div class="input-group">
+                    <label for="username">Username</label>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter password"
-                    required
-                >
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        autocomplete="username"
+                        required
+                    >
+                </div>
 
+                <div class="input-group">
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="login-footer">
+                <span>Protected access only</span>
             </div>
-            
-        <p>Please log in to continue</p>     
-            <button type="submit">
-                Login
-            </button>
 
-        </form>
-
-        <div id="message"></div>
+        </div>
 
     </div>
 
-</div>
-
-<script src="js/login.js?v=2"></script>
+    <script src="js/login.js"></script>
 
 </body>
 </html>
