@@ -89,6 +89,24 @@ document.addEventListener("DOMContentLoaded", async function () {
     const cameraFeed = document.getElementById("cameraPageFeed");
     const cameraBadge = document.getElementById("cameraPageBadge");
 
+    function applyStatusColor(status) {
+        const normalizedStatus = String(status).trim().toUpperCase();
+
+        cameraBadge.classList.remove(
+            "status-online",
+            "status-offline",
+            "status-unavailable"
+        );
+
+        if (normalizedStatus === "ONLINE") {
+            cameraBadge.classList.add("status-online");
+        } else if (normalizedStatus === "OFFLINE") {
+            cameraBadge.classList.add("status-offline");
+        } else {
+            cameraBadge.classList.add("status-unavailable");
+        }
+    }
+
     try {
         const response = await fetch("/api/camera/status", {
             method: "GET",
@@ -102,14 +120,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             cameraBadge.textContent =
                 "● UNAVAILABLE";
 
+            applyStatusColor("UNAVAILABLE");
             return;
         }
 
         const data = await response.json();
+        const status = String(data.status).trim().toUpperCase();
 
-        cameraBadge.textContent = "● " + data.status;
+        cameraBadge.textContent = "● " + status;
+        applyStatusColor(status);
 
-        if (data.status === "ONLINE") {
+        if (status === "ONLINE") {
             cameraMessage.style.display = "none";
 
             cameraFeed.style.display = "block";
@@ -127,6 +148,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         cameraBadge.textContent =
             "● UNAVAILABLE";
+
+        applyStatusColor("UNAVAILABLE");
     }
 });
 </script>

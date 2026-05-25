@@ -185,6 +185,46 @@ document.addEventListener("DOMContentLoaded", async function () {
     const liveBadge = document.getElementById("liveBadge");
     const cameraStatus = document.getElementById("cameraStatus");
 
+    function applyStatusColor(status) {
+        const normalizedStatus = String(status).trim().toUpperCase();
+
+        liveBadge.classList.remove(
+            "status-online",
+            "status-offline",
+            "status-unavailable"
+        );
+
+        if (cameraStatus) {
+            cameraStatus.classList.remove(
+                "status-online-text",
+                "status-offline-text",
+                "status-unavailable-text"
+            );
+        }
+
+        if (normalizedStatus === "ONLINE") {
+            liveBadge.classList.add("status-online");
+
+            if (cameraStatus) {
+                cameraStatus.classList.add("status-online-text");
+            }
+
+        } else if (normalizedStatus === "OFFLINE") {
+            liveBadge.classList.add("status-offline");
+
+            if (cameraStatus) {
+                cameraStatus.classList.add("status-offline-text");
+            }
+
+        } else {
+            liveBadge.classList.add("status-unavailable");
+
+            if (cameraStatus) {
+                cameraStatus.classList.add("status-unavailable-text");
+            }
+        }
+    }
+
     try {
         const response = await fetch("/api/camera/status", {
             method: "GET",
@@ -192,27 +232,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         if (!response.ok) {
-            cameraMessage.textContent = "Camera unavailable";
+            cameraMessage.textContent = "Camera unavailable in cloud deployment";
             liveBadge.textContent = "● UNAVAILABLE";
 
             if (cameraStatus) {
                 cameraStatus.textContent = "UNAVAILABLE";
             }
 
+            applyStatusColor("UNAVAILABLE");
             return;
         }
 
         const data = await response.json();
+        const status = String(data.status).trim().toUpperCase();
 
         if (cameraStatus) {
-            cameraStatus.textContent = data.status;
+            cameraStatus.textContent = status;
         }
 
-        liveBadge.textContent = "● " + data.status;
+        liveBadge.textContent = "● " + status;
+        applyStatusColor(status);
 
-        if (data.status === "ONLINE") {
+        if (status === "ONLINE") {
             cameraMessage.style.display = "none";
-
             liveFeed.style.display = "block";
             liveFeed.src = "/api/camera/stream";
         } else {
@@ -223,12 +265,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (error) {
         console.error("Camera status error:", error);
 
-        cameraMessage.textContent = "Camera unavailable";
+        cameraMessage.textContent = "Camera unavailable in cloud deployment";
         liveBadge.textContent = "● UNAVAILABLE";
 
         if (cameraStatus) {
             cameraStatus.textContent = "UNAVAILABLE";
         }
+
+        applyStatusColor("UNAVAILABLE");
     }
 });
 </script>
