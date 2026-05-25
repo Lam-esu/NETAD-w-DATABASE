@@ -1137,7 +1137,7 @@ button:hover {
 }
 
 .login-header {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 .login-icon {
@@ -1155,31 +1155,17 @@ button:hover {
     margin-bottom: 22px;
 }
 
-.login-icon svg {
-    width: 34px;
-    height: 34px;
-
-    stroke: white;
-    fill: none;
-
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
 .login-header h1 {
-    font-size: 30px;
-    letter-spacing: 1px;
+    font-size: 36px;
+    letter-spacing: 1.5px;
     line-height: 1.1;
-
     margin-bottom: 4px;
 }
 
 .login-header h2 {
-    font-size: 28px;
+    font-size: 32px;
     line-height: 1.1;
-
-    margin-bottom: 14px;
+    margin-bottom: 0;
 }
 
 .login-header p {
