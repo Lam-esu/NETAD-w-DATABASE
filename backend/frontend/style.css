@@ -11,8 +11,18 @@ body {
     min-height: 100vh;
 }
 
-/* LOGIN PAGE */
+/* =========================
+   LOGIN PAGE
+========================= */
 
+.login-page {
+    min-height: 100vh;
+    background: #071226;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.login-wrapper,
 .login-container {
     width: 100%;
     min-height: 100vh;
@@ -21,59 +31,103 @@ body {
     justify-content: center;
     align-items: center;
 
-    padding: 20px;
+    padding: 24px;
 }
 
+.login-card,
 .login-box {
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
 
     background: #14213d;
 
-    padding: 40px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
 
-    border-radius: 18px;
+    padding: 42px 38px;
 
-    box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
 }
 
-.login-box h1 {
+.login-header {
+    margin-bottom: 32px;
+}
+
+.login-header h1 {
     font-size: 34px;
-    margin-bottom: 10px;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    white-space: nowrap;
 }
 
+.login-header h2 {
+    font-size: 18px;
+    letter-spacing: 7px;
+    line-height: 1.1;
+    margin-bottom: 0;
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+.login-header p,
 .login-box p {
-    margin-bottom: 25px;
     color: #cbd5e1;
+    font-size: 15px;
+    margin-bottom: 25px;
 }
 
-.input-group {
-    margin-bottom: 18px;
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.input-group label {
+.input-group,
+.login-form .input-group {
+    margin-bottom: 0;
+}
+
+.input-group label,
+.login-form label {
     display: block;
+
     margin-bottom: 8px;
-    font-weight: bold;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #e2e8f0;
 }
 
-.input-group input {
+.input-group input,
+.login-form input {
     width: 100%;
 
-    padding: 14px;
+    padding: 15px 16px;
 
-    border: none;
-    border-radius: 8px;
+    border-radius: 12px;
+    border: 1px solid #334155;
 
     background: #26344f;
-
     color: white;
 
     font-size: 15px;
+
+    outline: none;
+
+    transition: 0.25s;
 }
 
-.input-group input:focus {
-    outline: 2px solid #2563eb;
+.input-group input::placeholder,
+.login-form input::placeholder {
+    color: #94a3b8;
+}
+
+.input-group input:focus,
+.login-form input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 button {
@@ -97,7 +151,70 @@ button:hover {
     background: #1d4ed8;
 }
 
-/* MAIN LAYOUT */
+.login-btn {
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 15px 18px;
+
+    border-radius: 12px;
+
+    background: #2563eb;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.login-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.login-footer {
+    margin-top: 24px;
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    text-align: center;
+}
+
+/* =========================
+   2FA PAGE
+========================= */
+
+.twofa-instruction {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.twofa-secret-box {
+    background: #26344f;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 700;
+    word-break: break-all;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
 
 .container {
     width: 100%;
@@ -106,17 +223,18 @@ button:hover {
     display: flex;
 }
 
-/* SIDEBAR */
-
-/* SIDEBAR */
-
 .sidebar {
-    width: 260px;
+    width: clamp(210px, 15vw, 260px);
     min-height: 100vh;
+
     background: linear-gradient(180deg, #020b1c, #03152f);
+
     padding: 28px 20px;
+
     flex-shrink: 0;
+
     border-right: 1px solid rgba(255,255,255,0.06);
+
     display: flex;
     flex-direction: column;
 }
@@ -146,15 +264,25 @@ button:hover {
     margin-bottom: 12px;
 }
 
+.sidebar li:last-child {
+    margin-top: auto;
+}
+
 .sidebar a {
     display: flex;
     align-items: center;
     gap: 12px;
+
     color: #dbeafe;
+
     text-decoration: none;
+
     padding: 14px 16px;
+
     border-radius: 12px;
+
     transition: 0.25s;
+
     font-weight: 600;
 }
 
@@ -170,14 +298,17 @@ button:hover {
 }
 
 .logout-btn {
-    margin-top: auto;
     width: 100%;
     background: rgba(255, 91, 91, 0.12);
     color: #ff6b6b;
+
     padding: 13px 18px;
+
     border-radius: 12px;
+
     font-size: 15px;
     font-weight: bold;
+
     text-align: left;
 }
 
@@ -185,12 +316,35 @@ button:hover {
     background: rgba(255, 91, 91, 0.22);
 }
 
-/* MAIN CONTENT */
+/* Role based sidebar */
+
+.admin-only {
+    display: none;
+}
+
+html.is-admin .admin-only,
+body.is-admin .admin-only {
+    display: block;
+}
+
+body.logging-out {
+    pointer-events: none;
+}
+
+body.logging-out .container {
+    opacity: 0.75;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
 
 .main-content {
     flex: 1;
 
-    padding: 48px 44px;
+    width: calc(100% - 260px);
+
+    padding: clamp(24px, 3vw, 48px);
 
     background:
         linear-gradient(
@@ -207,75 +361,99 @@ button:hover {
 }
 
 .page-header h1 {
-    font-size: 48px;
+    font-size: clamp(32px, 3vw, 52px);
     margin-bottom: 8px;
 }
 
 .page-header p {
     color: #cbd5e1;
+    font-size: clamp(14px, 1vw, 18px);
 }
 
-/* STATS */
+/* =========================
+   DASHBOARD STATS
+   Layout:
+        DEVICES
+   [ ICON ] 4
+        Description
+========================= */
 
 .stats-grid {
     display: grid;
-
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-
-    gap: 22px;
-
-    margin-bottom: 28px;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+    margin: 24px 0 30px;
 }
 
-.card {
+.stat-card {
     background: #14213d;
 
     border: 1px solid rgba(255,255,255,0.06);
 
     border-radius: 18px;
 
-    padding: 26px;
+    padding: 26px 24px;
+
+    min-height: 160px;
 
     display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-    align-items: center;
-
-    gap: 18px;
-
-    min-height: 145px;
+    overflow: hidden;
 
     transition: 0.3s;
 }
 
-.card:hover {
+.stat-card:hover {
     transform: translateY(-3px);
 }
 
-.card-icon {
-    width: 65px;
-    height: 65px;
+.stat-label {
+    margin-left: 82px;
+    margin-bottom: 8px;
 
-    background: #2563eb;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+
+    letter-spacing: 0.7px;
+}
+
+.stat-middle {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.card-icon {
+    width: 62px;
+    height: 62px;
+    min-width: 62px;
 
     border-radius: 16px;
 
     display: flex;
-    justify-content: center;
     align-items: center;
-
-    font-size: 30px;
+    justify-content: center;
 
     flex-shrink: 0;
 }
 
 .card-icon svg {
-    width: 34px;
-    height: 34px;
-    stroke: white;
+    width: 32px;
+    height: 32px;
+
+    stroke: #ffffff;
     fill: none;
+
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
+}
+
+.card-icon.blue {
+    background: #2563eb;
 }
 
 .card-icon.green {
@@ -290,20 +468,68 @@ button:hover {
     background: #f97316;
 }
 
+.stat-value {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.stat-desc {
+    margin-left: 82px;
+    margin-top: 8px;
+
+    font-size: 15px;
+    color: #cbd5e1;
+}
+
+/* Camera status text color in top card */
+
+#cameraStatus {
+    font-size: clamp(20px, 1.7vw, 30px);
+    letter-spacing: 2px;
+}
+
+#cameraStatus.status-online-text {
+    color: #4ade80;
+}
+
+#cameraStatus.status-offline-text,
+#cameraStatus.status-unavailable-text {
+    color: #f87171;
+}
+
+/* Compatibility with old card classes */
+
+.card {
+    background: #14213d;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    padding: 26px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 145px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
 .card h3 {
     font-size: 14px;
-
     text-transform: uppercase;
-
     color: #e2e8f0;
-
     margin-bottom: 6px;
 }
 
 .card p {
     font-size: 40px;
     font-weight: bold;
-
     margin-bottom: 4px;
 }
 
@@ -312,7 +538,9 @@ button:hover {
     font-size: 14px;
 }
 
-/* CAMERA SECTION */
+/* =========================
+   CAMERA SECTION
+========================= */
 
 .camera-section {
     background: #14213d;
@@ -324,6 +552,10 @@ button:hover {
     border: 1px solid rgba(255,255,255,0.06);
 }
 
+.dashboard-camera-large {
+    min-height: 720px;
+}
+
 .camera-header {
     display: flex;
 
@@ -332,16 +564,19 @@ button:hover {
     align-items: center;
 
     margin-bottom: 20px;
+
+    gap: 18px;
 }
 
 .camera-header h2 {
     font-size: 28px;
 }
 
-.camera-controls {
+.camera-badges {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
+    flex-wrap: wrap;
 }
 
 .camera-name {
@@ -357,88 +592,74 @@ button:hover {
 }
 
 .live-badge {
-    background: rgba(34, 197, 94, 0.18);
-
-    color: #4ade80;
-
-    padding: 10px 16px;
+    padding: 10px 18px;
 
     border-radius: 999px;
 
     font-weight: bold;
+
+    letter-spacing: 0.5px;
 }
 
-.main-camera-box {
-    width: 100%;
+.status-online {
+    background: rgba(34, 197, 94, 0.18);
+    color: #4ade80;
+}
 
+.status-offline,
+.status-unavailable {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+}
+
+.camera-feed-container {
+    width: 100%;
+}
+
+.camera-unavailable-box {
+    width: 100%;
+    height: clamp(420px, 60vh, 720px);
+
+    background: #020617;
+
+    border: 1px dashed #475569;
     border-radius: 14px;
 
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    background: #000;
+    color: #94a3b8;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    text-align: center;
 }
 
-.main-camera-box img {
-    width: 100%;
+.dashboard-camera-large .camera-unavailable-box,
+.dashboard-camera-box {
+    height: 680px;
+}
 
-    height: 650px;
+.camera-feed-container img {
+    width: 100%;
+    height: clamp(420px, 60vh, 720px);
 
     object-fit: cover;
 
-    display: block;
+    border-radius: 14px;
 
     background: #000;
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 1200px) {
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .main-camera-box img {
-        height: 500px;
-    }
+.dashboard-camera-large .camera-feed-container img {
+    height: 680px;
 }
 
-@media (max-width: 800px) {
-
-    .container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        min-height: auto;
-    }
-
-    .logout-btn {
-        margin-top: 20px;
-    }
-
-    .main-content {
-        padding: 28px 18px;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .camera-header {
-        flex-direction: column;
-        align-items: flex-start;
-
-        gap: 15px;
-    }
-
-    .main-camera-box img {
-        height: 320px;
-    }
-}
-
-/* ADMIN PANEL */
+/* =========================
+   ADMIN PANEL
+========================= */
 
 .admin-grid {
     display: flex;
@@ -456,6 +677,8 @@ button:hover {
     padding: 28px;
 
     transition: 0.3s;
+
+    overflow-x: auto;
 }
 
 .admin-card:hover {
@@ -468,6 +691,8 @@ button:hover {
     justify-content: space-between;
 
     align-items: center;
+
+    gap: 20px;
 }
 
 .admin-card h2 {
@@ -483,37 +708,6 @@ button:hover {
     min-width: 160px;
 }
 
-.danger-btn {
-    background: #dc2626;
-}
-
-.danger-btn:hover {
-    background: #b91c1c;
-}
-
-@media (max-width: 800px) {
-
-    .admin-card-top {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-    }
-
-    .admin-card button {
-        width: 100%;
-    }
-}
-
-.settings-select {
-    min-width: 180px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid #334155;
-    background: #0b1730;
-    color: white;
-    font-weight: bold;
-}
-
 .admin-form {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -522,12 +716,19 @@ button:hover {
 }
 
 .admin-form input,
-.admin-form select {
+.admin-form select,
+.settings-select {
     padding: 13px;
     border-radius: 10px;
     border: 1px solid #334155;
     background: #0b1730;
     color: white;
+}
+
+.settings-select {
+    min-width: 180px;
+    padding: 12px 16px;
+    font-weight: bold;
 }
 
 .danger-btn {
@@ -539,15 +740,9 @@ button:hover {
     background: #b91c1c;
 }
 
-@media (max-width: 1000px) {
-    .admin-form {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* FIX ADMIN USERS TABLE */
-
-/* USERS TABLE */
+/* =========================
+   USERS TABLE
+========================= */
 
 .users-table {
     width: 100%;
@@ -580,12 +775,6 @@ button:hover {
     vertical-align: middle;
 }
 
-.users-table td:last-child {
-    text-align: center;
-}
-
-/* COLUMN WIDTHS */
-
 .users-table th:nth-child(1),
 .users-table td:nth-child(1) {
     width: 16%;
@@ -609,9 +798,8 @@ button:hover {
 .users-table th:nth-child(5),
 .users-table td:nth-child(5) {
     width: 26%;
+    text-align: center;
 }
-
-/* BUTTON AREA */
 
 .user-actions {
     display: flex;
@@ -626,17 +814,9 @@ button:hover {
     font-size: 13px;
 }
 
-/* TABLE CONTAINER */
-
-.admin-card {
-    overflow-x: auto;
-}
-
-.users-table th:last-child {
-    text-align: center;
-}
-
-/* LOGS PAGE */
+/* =========================
+   LOGS PAGE
+========================= */
 
 .logs-card {
     background: #14213d;
@@ -743,167 +923,28 @@ button:hover {
     width: 26%;
 }
 
-.camera-unavailable-box {
-    width: 100%;
-    height: 520px;
-    background: #020617;
-    border: 1px dashed #475569;
-    border-radius: 14px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    color: #94a3b8;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* BIGGER DASHBOARD CAMERA */
-
-.dashboard-camera-large {
-    min-height: 720px;
-}
-
-.dashboard-camera-box {
-    height: 680px;
-}
-
-.camera-unavailable-box {
-    width: 100%;
-    height: 520px;
-
-    background: #020617;
-
-    border: 1px dashed #475569;
-    border-radius: 14px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    color: #94a3b8;
-
-    font-size: 18px;
-    font-weight: bold;
-
-    text-align: center;
-}
-
-.dashboard-camera-large .camera-unavailable-box {
-    height: 680px;
-}
-
-.camera-feed-container img {
-    width: 100%;
-    height: 520px;
-
-    object-fit: cover;
-
-    border-radius: 14px;
-
-    background: #000;
-}
-
-.dashboard-camera-large .camera-feed-container img {
-    height: 680px;
-}
-
-@media (max-width: 900px) {
-    .dashboard-camera-large .camera-unavailable-box,
-    .dashboard-camera-large .camera-feed-container img {
-        height: 420px;
-    }
-
-    .camera-unavailable-box,
-    .camera-feed-container img {
-        height: 360px;
-    }
-}
-
 /* =========================
-   RESPONSIVE UI FIXES
-   Laptop / Desktop / Wide Screens
+   RESPONSIVE
 ========================= */
 
-/* Make the whole layout flexible */
-.container {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-}
-
-/* Sidebar stays fixed but not too large */
-.sidebar {
-    width: clamp(210px, 15vw, 260px);
-    flex-shrink: 0;
-}
-
-/* Main content adjusts based on screen width */
-.main-content {
-    flex: 1;
-    width: calc(100% - 260px);
-    padding: clamp(24px, 3vw, 48px);
-    overflow-x: hidden;
-}
-
-/* Dashboard cards adjust automatically */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
-    gap: clamp(16px, 2vw, 24px);
-}
-
-/* Cards scale better */
-.stats-card,
-.card {
-    min-width: 0;
-    padding: clamp(18px, 2vw, 28px);
-}
-
-/* Make text scale better */
-.page-header h1 {
-    font-size: clamp(32px, 3vw, 52px);
-}
-
-.page-header p {
-    font-size: clamp(14px, 1vw, 18px);
-}
-
-.card-info h2,
-.card p {
-    font-size: clamp(26px, 2.5vw, 42px);
-}
-
-.card-info h4 {
-    font-size: clamp(12px, 0.9vw, 15px);
-}
-
-/* Camera box adapts to screen height */
-.camera-feed-container img,
-.camera-unavailable-box {
-    width: 100%;
-    height: clamp(420px, 60vh, 720px);
-}
-
-/* Large desktop screens */
 @media (min-width: 1600px) {
     .main-content {
         padding: 56px 64px;
     }
 
-    .camera-feed-container img,
-    .camera-unavailable-box {
+    .dashboard-camera-large .camera-unavailable-box,
+    .dashboard-camera-large .camera-feed-container img {
         height: 680px;
     }
 }
 
-/* Medium laptops */
-@media (max-width: 1300px) {
+@media (max-width: 1400px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
 
+@media (max-width: 1300px) {
     .main-content {
         padding: 36px 28px;
     }
@@ -914,7 +955,12 @@ button:hover {
     }
 }
 
-/* Small laptops / tablets */
+@media (max-width: 1000px) {
+    .admin-form {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 900px) {
     .container {
         flex-direction: column;
@@ -934,6 +980,10 @@ button:hover {
 
     .sidebar li {
         margin-bottom: 0;
+    }
+
+    .sidebar li:last-child {
+        margin-top: 0;
     }
 
     .sidebar a {
@@ -960,13 +1010,14 @@ button:hover {
         gap: 14px;
     }
 
+    .dashboard-camera-large .camera-unavailable-box,
+    .dashboard-camera-large .camera-feed-container img,
     .camera-feed-container img,
     .camera-unavailable-box {
         height: 360px;
     }
 
     .logs-toolbar,
-    .search-container,
     .logs-search {
         flex-direction: column;
         align-items: stretch;
@@ -978,17 +1029,31 @@ button:hover {
         width: 100%;
         max-width: 100%;
     }
+
+    .admin-card-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .admin-card button {
+        width: 100%;
+    }
 }
 
-/* Very small screens */
+@media (max-width: 700px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        min-height: auto;
+    }
+}
+
 @media (max-width: 600px) {
     .page-header h1 {
         font-size: 30px;
-    }
-
-    .stats-card {
-        flex-direction: column;
-        align-items: flex-start;
     }
 
     .camera-feed-container img,
@@ -1009,261 +1074,9 @@ button:hover {
     .admin-card {
         overflow-x: auto;
     }
-}
 
-/* FIX LONG CAMERA STATUS TEXT OVERLAP */
-
-.stats-card {
-    min-width: 0;
-    overflow: hidden;
-}
-
-.card-info {
-    min-width: 0;
-    overflow: hidden;
-}
-
-.card-info h2 {
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    line-height: 1.1;
-}
-
-/* Specifically reduce long status text */
-#cameraStatus {
-    font-size: clamp(20px, 1.7vw, 28px);
-    letter-spacing: 2px;
-}
-
-/* Better spacing for stat cards */
-.stats-grid {
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
-}
-
-/* On medium screens, use 2 columns so cards do not squeeze */
-@media (max-width: 1400px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* On small screens, use 1 column */
-@media (max-width: 800px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* CAMERA STATUS BADGES */
-
-.camera-badges {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-.camera-name {
-    background: #0b1730;
-    border: 1px solid #334155;
-    padding: 12px 18px;
-    border-radius: 10px;
-    font-weight: bold;
-}
-
-.live-badge {
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-.status-online {
-    background: rgba(34, 197, 94, 0.18);
-    color: #4ade80;
-}
-
-.status-offline,
-.status-unavailable {
-    background: rgba(239, 68, 68, 0.18);
-    color: #f87171;
-}
-
-/* Top dashboard card color status */
-
-#cameraStatus.status-online-text {
-    color: #4ade80;
-}
-
-#cameraStatus.status-offline-text,
-#cameraStatus.status-unavailable-text {
-    color: #f87171;
-}
-
-/* =========================
-   IMPROVED LOGIN PAGE
-========================= */
-
-.login-page {
-    min-height: 100vh;
-    background: #071226;
-    color: white;
-    font-family: Arial, sans-serif;
-}
-
-.login-wrapper {
-    width: 100%;
-    min-height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 24px;
-}
-
-.login-card {
-    width: 100%;
-    max-width: 440px;
-
-    background: #14213d;
-
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 22px;
-
-    padding: 42px 38px;
-
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-}
-
-.login-header {
-    margin-bottom: 32px;
-}
-
-.login-icon {
-    width: 62px;
-    height: 62px;
-
-    background: #2563eb;
-
-    border-radius: 18px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-bottom: 22px;
-}
-
-.login-header h1 {
-    font-size: 34px;
-    letter-spacing: 2px;
-    line-height: 1.1;
-    margin-bottom: 6px;
-    white-space: nowrap;
-}
-
-.login-header h2 {
-    font-size: 18px;
-    letter-spacing: 7px;
-    line-height: 1.1;
-    margin-bottom: 0;
-    color: #94a3b8;
-    font-weight: 700;
-}
-
-.login-header p {
-    color: #cbd5e1;
-    font-size: 15px;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.login-form .input-group {
-    margin-bottom: 0;
-}
-
-.login-form label {
-    display: block;
-
-    margin-bottom: 8px;
-
-    font-size: 14px;
-    font-weight: 700;
-
-    color: #e2e8f0;
-}
-
-.login-form input {
-    width: 100%;
-
-    padding: 15px 16px;
-
-    border-radius: 12px;
-    border: 1px solid #334155;
-
-    background: #26344f;
-    color: white;
-
-    font-size: 15px;
-
-    outline: none;
-
-    transition: 0.25s;
-}
-
-.login-form input::placeholder {
-    color: #94a3b8;
-}
-
-.login-form input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
-}
-
-.login-btn {
-    width: 100%;
-
-    margin-top: 8px;
-
-    padding: 15px 18px;
-
-    border-radius: 12px;
-
-    background: #2563eb;
-    color: white;
-
-    font-size: 15px;
-    font-weight: 800;
-
-    cursor: pointer;
-
-    transition: 0.25s;
-}
-
-.login-btn:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-}
-
-.login-footer {
-    margin-top: 24px;
-    padding-top: 20px;
-
-    border-top: 1px solid rgba(255,255,255,0.08);
-
-    color: #94a3b8;
-
-    font-size: 13px;
-    text-align: center;
-}
-
-@media (max-width: 520px) {
-    .login-card {
+    .login-card,
+    .login-box {
         padding: 34px 26px;
     }
 
@@ -1272,162 +1085,6 @@ button:hover {
     }
 
     .login-header h2 {
-        font-size: 24px;
+        font-size: 18px;
     }
-}
-
-/* HIDE ADMIN LINKS BY DEFAULT */
-.admin-only {
-    display: none;
-}
-
-/* SHOW ADMIN LINKS ONLY AFTER AUTH.JS CONFIRMS ADMIN */
-body.is-admin .admin-only {
-    display: block;
-}
-
-.twofa-instruction {
-    color: #cbd5e1;
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 16px;
-}
-
-.twofa-secret-box {
-    background: #26344f;
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 22px;
-
-    color: #e2e8f0;
-    font-size: 14px;
-    font-weight: 700;
-    word-break: break-all;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
-    gap: 24px;
-    margin: 24px 0 30px;
-}
-
-.stat-card {
-    background: rgba(22, 36, 73, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 18px;
-    padding: 24px;
-    min-height: 155px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.stat-title {
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.7px;
-    color: #ffffff;
-    margin-bottom: 14px;
-    text-align: center;
-}
-
-.stat-middle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 22px;
-    margin-bottom: 12px;
-}
-
-.stat-middle h2 {
-    font-size: 36px;
-    font-weight: 900;
-    line-height: 1;
-    color: #ffffff;
-}
-
-.stat-card p {
-    text-align: center;
-    font-size: 14px;
-    color: #cbd5e1;
-}
-
-.card-icon {
-    width: 58px;
-    height: 58px;
-    min-width: 58px;
-    border-radius: 16px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.card-icon svg {
-    width: 30px;
-    height: 30px;
-    stroke: #ffffff;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.card-icon.blue {
-    background: #2563eb;
-}
-
-.card-icon.green {
-    background: #16a34a;
-}
-
-.card-icon.purple {
-    background: #7c3aed;
-}
-
-.card-icon.orange {
-    background: #f97316;
-}
-
-#cameraStatus.status-online-text {
-    color: #4ade80;
-}
-
-#cameraStatus.status-offline-text,
-#cameraStatus.status-unavailable-text {
-    color: #f87171;
-}
-
-@media (max-width: 1300px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 700px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* ROLE-BASED SIDEBAR FIX */
-
-.admin-only {
-    display: none;
-}
-
-html.is-admin .admin-only,
-body.is-admin .admin-only {
-    display: block;
-}
-
-body.logging-out {
-    pointer-events: none;
-}
-
-body.logging-out .container {
-    opacity: 0.75;
 }

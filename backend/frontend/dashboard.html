@@ -26,33 +26,23 @@
 
         <ul>
             <li>
-                <a class="active" href="dashboard.html">
-                    Dashboard
-                </a>
+                <a class="active" href="dashboard.html">Dashboard</a>
             </li>
 
             <li>
-                <a href="cameras.html">
-                    Cameras
-                </a>
+                <a href="cameras.html">Cameras</a>
             </li>
 
             <li class="admin-only">
-                <a href="logs.html">
-                    Logs
-                </a>
+                <a href="logs.html">Logs</a>
             </li>
 
             <li class="admin-only">
-                <a href="admin.html">
-                    Users
-                </a>
+                <a href="admin.html">Users</a>
             </li>
 
             <li>
-                <a href="settings.html">
-                    Settings
-                </a>
+                <a href="settings.html">Settings</a>
             </li>
 
             <li>
@@ -73,7 +63,7 @@
         <div class="stats-grid">
 
             <div class="stat-card">
-                <h4 class="stat-title">DEVICES</h4>
+                <div class="stat-label">DEVICES</div>
 
                 <div class="stat-middle">
                     <div class="card-icon blue">
@@ -84,14 +74,18 @@
                         </svg>
                     </div>
 
-                    <h2 id="devicesCount">0</h2>
+                    <div class="stat-value" id="devicesCount">
+                        0
+                    </div>
                 </div>
 
-                <p>Devices with access</p>
+                <div class="stat-desc">
+                    Devices with access
+                </div>
             </div>
 
             <div class="stat-card">
-                <h4 class="stat-title">CAMERA STATUS</h4>
+                <div class="stat-label">CAMERA STATUS</div>
 
                 <div class="stat-middle">
                     <div class="card-icon green">
@@ -101,14 +95,18 @@
                         </svg>
                     </div>
 
-                    <h2 id="cameraStatus">CHECKING</h2>
+                    <div class="stat-value" id="cameraStatus">
+                        CHECKING
+                    </div>
                 </div>
 
-                <p>CCTV stream status</p>
+                <div class="stat-desc">
+                    CCTV stream status
+                </div>
             </div>
 
             <div class="stat-card">
-                <h4 class="stat-title">ACTIVE USERS</h4>
+                <div class="stat-label">ACTIVE USERS</div>
 
                 <div class="stat-middle">
                     <div class="card-icon purple">
@@ -118,14 +116,18 @@
                         </svg>
                     </div>
 
-                    <h2 id="activeUsers">0</h2>
+                    <div class="stat-value" id="activeUsers">
+                        0
+                    </div>
                 </div>
 
-                <p>Currently online</p>
+                <div class="stat-desc">
+                    Currently online
+                </div>
             </div>
 
             <div class="stat-card">
-                <h4 class="stat-title">LOGS TODAY</h4>
+                <div class="stat-label">LOGS TODAY</div>
 
                 <div class="stat-middle">
                     <div class="card-icon orange">
@@ -137,10 +139,14 @@
                         </svg>
                     </div>
 
-                    <h2 id="logsToday">0</h2>
+                    <div class="stat-value" id="logsToday">
+                        0
+                    </div>
                 </div>
 
-                <p>Total activity logs</p>
+                <div class="stat-desc">
+                    Total activity logs
+                </div>
             </div>
 
         </div>
@@ -238,11 +244,15 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         if (!response.ok) {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
-            liveBadge.textContent = "● UNAVAILABLE";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
+
+            liveBadge.textContent =
+                "● UNAVAILABLE";
 
             if (cameraStatus) {
-                cameraStatus.textContent = "UNAVAILABLE";
+                cameraStatus.textContent =
+                    "UNAVAILABLE";
             }
 
             applyStatusColor("UNAVAILABLE");
@@ -265,17 +275,22 @@ document.addEventListener("DOMContentLoaded", async function () {
             liveFeed.style.display = "block";
             liveFeed.src = "/api/camera/stream";
         } else {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
         }
 
     } catch (error) {
         console.error("Camera status error:", error);
 
-        cameraMessage.textContent = "Camera unavailable in cloud deployment";
-        liveBadge.textContent = "● UNAVAILABLE";
+        cameraMessage.textContent =
+            "Camera unavailable in cloud deployment";
+
+        liveBadge.textContent =
+            "● UNAVAILABLE";
 
         if (cameraStatus) {
-            cameraStatus.textContent = "UNAVAILABLE";
+            cameraStatus.textContent =
+                "UNAVAILABLE";
         }
 
         applyStatusColor("UNAVAILABLE");
