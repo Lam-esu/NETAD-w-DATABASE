@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup 2FA</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="login-page">
+
+    <div class="login-wrapper">
+
+        <div class="login-card">
+
+            <div class="login-header">
+                <h1>SETUP 2FA</h1>
+                <h2>SECURITY</h2>
+            </div>
+
+            <p class="twofa-instruction">
+                Add this setup key to Google Authenticator or Microsoft Authenticator.
+            </p>
+
+            <div class="twofa-secret-box" id="secretBox">
+                Loading setup key...
+            </div>
+
+            <form id="setupTwoFactorForm" class="login-form">
+
+                <div class="input-group">
+                    <label for="code">Enter 6-digit code</label>
+
+                    <input
+                        type="text"
+                        id="code"
+                        placeholder="Enter authenticator code"
+                        maxlength="6"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Enable 2FA
+                </button>
+
+            </form>
+
+            <div class="login-footer">
+                <span>2FA is required before accessing the system</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/setup-2fa.js"></script>
+
+</body>
+</html>

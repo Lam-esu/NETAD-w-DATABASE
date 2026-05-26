@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
                 data = await response.json();
-            } catch (jsonError) {
-                console.error("Invalid JSON response:", jsonError);
+            } catch (error) {
+                console.error("Invalid server response:", error);
                 alert("Server returned an invalid response.");
                 return;
             }
@@ -38,13 +38,21 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("LOGIN RESPONSE:", data);
 
             if (response.ok) {
+
+                // New users without 2FA will be redirected here first
                 if (data.requires_2fa_setup === true) {
                     window.location.href = "/setup-2fa.html";
                     return;
                 }
 
+                // Existing users with 2FA enabled verify their code here
                 if (data.requires_2fa === true) {
                     window.location.href = "/verify-2fa.html";
+                    return;
+                }
+
+                if (!data.user) {
+                    alert("Login response missing user data.");
                     return;
                 }
 
@@ -61,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
             console.error("Login error:", error);
-            alert("Server error. Check Railway logs.");
+            alert("Server error. Check Flask or Railway logs.");
         }
     });
 });
