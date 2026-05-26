@@ -20,7 +20,8 @@
             </div>
 
             <p class="twofa-instruction">
-                Add this setup key to Google Authenticator or Microsoft Authenticator.
+                Open Google Authenticator or Microsoft Authenticator, choose
+                <strong>Enter setup key</strong>, then copy the setup key below.
             </p>
 
             <div class="twofa-secret-box" id="secretBox">
@@ -35,13 +36,16 @@
                     <input
                         type="text"
                         id="code"
+                        name="code"
                         placeholder="Enter authenticator code"
                         maxlength="6"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
                         required
                     >
                 </div>
 
-                <button type="submit" class="login-btn">
+                <button type="submit" id="enable2faBtn" class="login-btn">
                     Enable 2FA
                 </button>
 

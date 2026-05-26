@@ -15,9 +15,13 @@
         <div class="login-card">
 
             <div class="login-header">
-                <h1>2FA VERIFICATION</h1>
+                <h1>VERIFY 2FA</h1>
                 <h2>SECURITY</h2>
             </div>
+
+            <p class="twofa-instruction">
+                Enter the 6-digit code from your authenticator app.
+            </p>
 
             <form id="twoFactorForm" class="login-form">
 
@@ -27,20 +31,23 @@
                     <input
                         type="text"
                         id="code"
+                        name="code"
                         placeholder="Enter 6-digit code"
                         maxlength="6"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
                         required
                     >
                 </div>
 
-                <button type="submit" class="login-btn">
+                <button type="submit" id="verify2faBtn" class="login-btn">
                     Verify
                 </button>
 
             </form>
 
             <div class="login-footer">
-                <span>Enter the code from your authenticator app</span>
+                <span>Protected two-factor authentication</span>
             </div>
 
         </div>
