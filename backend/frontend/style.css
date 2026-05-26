@@ -1306,4 +1306,109 @@ body.is-admin .admin-only {
     word-break: break-all;
 }
 
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: 24px;
+    margin: 24px 0 30px;
+}
 
+.stat-card {
+    background: rgba(22, 36, 73, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 24px;
+    min-height: 155px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-title {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    color: #ffffff;
+    margin-bottom: 14px;
+    text-align: center;
+}
+
+.stat-middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    margin-bottom: 12px;
+}
+
+.stat-middle h2 {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+}
+
+.stat-card p {
+    text-align: center;
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+.card-icon {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-icon svg {
+    width: 30px;
+    height: 30px;
+    stroke: #ffffff;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.card-icon.blue {
+    background: #2563eb;
+}
+
+.card-icon.green {
+    background: #16a34a;
+}
+
+.card-icon.purple {
+    background: #7c3aed;
+}
+
+.card-icon.orange {
+    background: #f97316;
+}
+
+#cameraStatus.status-online-text {
+    color: #4ade80;
+}
+
+#cameraStatus.status-offline-text,
+#cameraStatus.status-unavailable-text {
+    color: #f87171;
+}
+
+@media (max-width: 1300px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
