@@ -2,11 +2,14 @@ from datetime import datetime, timedelta
 import csv
 import io
 import os
-from flask import Flask
-from werkzeug.middleware.proxy_fix import ProxyFix
+
+import pyotp
+from dotenv import load_dotenv
+
 from flask import Flask, request, jsonify, session, Response, send_from_directory
 from flask_cors import CORS
 from werkzeug.utils import safe_join
+from werkzeug.middleware.proxy_fix import ProxyFix 
 
 from config import Config
 from extensions import db, bcrypt, limiter
@@ -19,9 +22,23 @@ from security import (
 )
 from camera import CameraService
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+
+# =====================================================
+# LOAD ENV VARIABLES
+# =====================================================
+
+load_dotenv()
+
+
+# =====================================================
+# APP CONFIG
+# =====================================================
+
 app = Flask(
     __name__,
-    static_folder="frontend",
+    static_folder=FRONTEND_DIR,
     static_url_path=""
 )
 
@@ -33,6 +50,33 @@ app.wsgi_app = ProxyFix(
 
 app.config.from_object(Config)
 
+
+# =====================================================
+# DATABASE CONFIG
+# LOCAL = SQLITE
+# RAILWAY = POSTGRESQL
+# =====================================================
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite:///instance/secure_cctv.db"
+)
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgres://",
+        "postgresql://",
+        1
+    )
+
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
+# =====================================================
+# SESSION SECURITY
+# =====================================================
+
 IS_PRODUCTION = os.getenv("RAILWAY_ENVIRONMENT") is not None
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -40,11 +84,20 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = IS_PRODUCTION
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 
+
+# =====================================================
+# INIT EXTENSIONS
+# =====================================================
+
 CORS(
     app,
     supports_credentials=True,
     origins=[
-        "https://web-production-e808b.up.railway.app"
+        "https://web-production-e808b.up.railway.app",
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+        "http://127.0.0.1:5000",
+        "http://localhost:5000"
     ]
 )
 
@@ -52,10 +105,12 @@ db.init_app(app)
 bcrypt.init_app(app)
 limiter.init_app(app)
 
-camera_source = os.getenv(
-    "CAMERA_SOURCE",
-    app.config.get("CAMERA_SOURCE", "")
-)
+
+# =====================================================
+# CAMERA CONFIG
+# =====================================================
+
+camera_source = os.getenv("CAMERA_SOURCE", "")
 
 camera_service = (
     CameraService(camera_source)
@@ -63,33 +118,34 @@ camera_service = (
     else None
 )
 
-app.after_request(add_security_headers)
 
-@app.route("/health")
-def health():
-    return jsonify({
-        "status": "ok",
-        "message": "Correct app.py is running"
-    })
+# =====================================================
+# SECURITY HEADERS
+# =====================================================
+
+app.after_request(add_security_headers)
 
 
 # =====================================================
 # FRONTEND ROUTES
 # =====================================================
 
+
+
 @app.route("/")
 def serve_login():
-    return send_from_directory("frontend", "index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.route("/<path:filename>")
 def serve_frontend(filename):
-    safe_path = safe_join("frontend", filename)
+    safe_path = safe_join(FRONTEND_DIR, filename)
 
     if safe_path is None:
         return jsonify({"error": "Invalid file path"}), 400
 
-    return send_from_directory("frontend", filename)
+    return send_from_directory(FRONTEND_DIR, filename)
+
 
 # =====================================================
 # SETUP DEFAULT ADMIN
@@ -97,10 +153,14 @@ def serve_frontend(filename):
 
 @app.route("/api/setup", methods=["POST"])
 def setup_admin():
-    existing_admin = User.query.filter_by(username="admin").first()
+    existing_admin = User.query.filter_by(
+        username="admin"
+    ).first()
 
     if existing_admin:
-        return jsonify({"message": "Admin already exists"}), 200
+        return jsonify({
+            "message": "Admin already exists"
+        }), 200
 
     admin = User(
         username="admin",
@@ -119,6 +179,7 @@ def setup_admin():
         "password": "admin123"
     }), 201
 
+
 # =====================================================
 # AUTH ROUTES
 # =====================================================
@@ -126,13 +187,12 @@ def setup_admin():
 @app.route("/api/auth/register", methods=["POST"])
 @admin_required
 def register():
-
     data = request.get_json() or {}
 
     username = data.get("username", "").strip()
     email = data.get("email", "").strip()
     password = data.get("password", "")
-    role = data.get("role", "user")
+    role = data.get("role", "user").strip().lower()
 
     if not username or not email or not password:
         return jsonify({
@@ -149,11 +209,22 @@ def register():
             "error": "Invalid role"
         }), 400
 
-    existing_user = User.query.filter_by(username=username).first()
+    existing_user = User.query.filter_by(
+        username=username
+    ).first()
 
     if existing_user:
         return jsonify({
             "error": "Username already exists"
+        }), 409
+
+    existing_email = User.query.filter_by(
+        email=email
+    ).first()
+
+    if existing_email:
+        return jsonify({
+            "error": "Email already exists"
         }), 409
 
     user = User(
@@ -180,47 +251,60 @@ def register():
 @app.route("/api/auth/login", methods=["POST"])
 @limiter.limit("5 per minute")
 def login():
-
     data = request.get_json() or {}
 
     username = data.get("username", "").strip()
     password = data.get("password", "")
 
-    user = User.query.filter_by(username=username).first()
+    if not username or not password:
+        return jsonify({
+            "error": "Username and password are required"
+        }), 400
+
+    user = User.query.filter_by(
+        username=username
+    ).first()
 
     if not user:
-        write_audit_log(username, "Failed login: user not found")
+        write_audit_log(
+            username,
+            "Failed login: user not found"
+        )
 
         return jsonify({
             "error": "Invalid username or password"
         }), 401
 
     if user.locked_until and datetime.utcnow() < user.locked_until:
-        write_audit_log(username, "Blocked login: account locked")
+        write_audit_log(
+            username,
+            "Blocked login: account locked"
+        )
 
         return jsonify({
-            "error": "Account temporarily locked"
+            "error": "Account temporarily locked. Try again later."
         }), 423
 
     if not user.is_active:
-        write_audit_log(username, "Blocked login: inactive account")
+        write_audit_log(
+            username,
+            "Blocked login: inactive account"
+        )
 
         return jsonify({
             "error": "Account disabled"
         }), 403
 
     if not user.check_password(password):
-
         user.failed_attempts += 1
 
-        if user.failed_attempts >= 5:
+        if user.failed_attempts >= 3:
             user.locked_until = datetime.utcnow() + timedelta(minutes=15)
 
             write_audit_log(
                 username,
-                "Account locked after failed attempts"
+                "Account locked after 3 failed login attempts"
             )
-
         else:
             write_audit_log(
                 username,
@@ -229,8 +313,11 @@ def login():
 
         db.session.commit()
 
+        remaining_attempts = max(0, 3 - user.failed_attempts)
+
         return jsonify({
-            "error": "Invalid username or password"
+            "error": "Invalid username or password",
+            "remaining_attempts": remaining_attempts
         }), 401
 
     user.failed_attempts = 0
@@ -238,16 +325,91 @@ def login():
 
     db.session.commit()
 
+    if user.two_factor_enabled:
+        session.clear()
+        session.permanent = True
+        session["pending_2fa_user_id"] = user.id
+        session.modified = True
+
+        write_audit_log(
+            user.username,
+            "Password accepted, 2FA required"
+        )
+
+        return jsonify({
+            "message": "2FA required",
+            "requires_2fa": True
+        }), 200
+
+    session.clear()
     session.permanent = True
     session["user_id"] = user.id
     session["username"] = user.username
     session["role"] = user.role.strip().lower()
     session.modified = True
 
-    write_audit_log(user.username, "Logged in")
+    write_audit_log(
+        user.username,
+        "Logged in"
+    )
 
     return jsonify({
         "message": "Login successful",
+        "requires_2fa": False,
+        "user": {
+            "username": user.username,
+            "role": user.role.strip().lower()
+        }
+    })
+
+
+@app.route("/api/auth/verify-2fa", methods=["POST"])
+def verify_2fa():
+    data = request.get_json() or {}
+
+    code = data.get("code", "").strip()
+
+    user_id = session.get("pending_2fa_user_id")
+
+    if not user_id:
+        return jsonify({
+            "error": "No pending 2FA session"
+        }), 400
+
+    user = User.query.get(user_id)
+
+    if not user or not user.two_factor_secret:
+        return jsonify({
+            "error": "Invalid 2FA session"
+        }), 400
+
+    totp = pyotp.TOTP(user.two_factor_secret)
+
+    if not totp.verify(code, valid_window=1):
+        write_audit_log(
+            user.username,
+            "Failed 2FA verification"
+        )
+
+        return jsonify({
+            "error": "Invalid 2FA code"
+        }), 401
+
+    session.pop("pending_2fa_user_id", None)
+
+    session.permanent = True
+    session["user_id"] = user.id
+    session["username"] = user.username
+    session["role"] = user.role.strip().lower()
+    session.modified = True
+
+    write_audit_log(
+        user.username,
+        "Logged in with 2FA"
+    )
+
+    return jsonify({
+        "message": "2FA verified",
         "user": {
             "username": user.username,
             "role": user.role.strip().lower()
@@ -267,10 +429,12 @@ def current_user():
 @app.route("/api/auth/logout", methods=["POST"])
 @login_required
 def logout():
-
     username = session.get("username")
 
-    write_audit_log(username, "Logged out")
+    write_audit_log(
+        username,
+        "Logged out"
+    )
 
     session.clear()
 
@@ -278,37 +442,162 @@ def logout():
         "message": "Logged out successfully"
     })
 
-# DASHBOARD
 
+# =====================================================
+# 2FA SETUP ROUTES
+# =====================================================
+
+@app.route("/api/auth/2fa/setup", methods=["POST"])
+@login_required
+def setup_2fa():
+    user = User.query.get(
+        session.get("user_id")
+    )
+
+    if not user:
+        return jsonify({
+            "error": "User not found"
+        }), 404
+
+    secret = pyotp.random_base32()
+
+    user.two_factor_secret = secret
+    user.two_factor_enabled = False
+
+    db.session.commit()
+
+    otp_uri = pyotp.TOTP(secret).provisioning_uri(
+        name=user.email,
+        issuer_name="Secure CCTV System"
+    )
+
+    write_audit_log(
+        user.username,
+        "Started 2FA setup"
+    )
+
+    return jsonify({
+        "message": "2FA setup started",
+        "secret": secret,
+        "otp_uri": otp_uri
+    })
+
+
+@app.route("/api/auth/2fa/enable", methods=["POST"])
+@login_required
+def enable_2fa():
+    data = request.get_json() or {}
+
+    code = data.get("code", "").strip()
+
+    user = User.query.get(
+        session.get("user_id")
+    )
+
+    if not user or not user.two_factor_secret:
+        return jsonify({
+            "error": "2FA setup not started"
+        }), 400
+
+    totp = pyotp.TOTP(user.two_factor_secret)
+
+    if not totp.verify(code, valid_window=1):
+        write_audit_log(
+            user.username,
+            "Failed enabling 2FA"
+        )
+
+        return jsonify({
+            "error": "Invalid 2FA code"
+        }), 401
+
+    user.two_factor_enabled = True
+
+    db.session.commit()
+
+    write_audit_log(
+        user.username,
+        "Enabled 2FA"
+    )
+
+    return jsonify({
+        "message": "2FA enabled successfully"
+    })
+
+
+@app.route("/api/auth/2fa/disable", methods=["POST"])
+@login_required
+def disable_2fa():
+    data = request.get_json() or {}
+
+    password = data.get("password", "")
+
+    user = User.query.get(
+        session.get("user_id")
+    )
+
+    if not user:
+        return jsonify({
+            "error": "User not found"
+        }), 404
+
+    if not user.check_password(password):
+        write_audit_log(
+            user.username,
+            "Failed disabling 2FA: wrong password"
+        )
+
+        return jsonify({
+            "error": "Invalid password"
+        }), 401
+
+    user.two_factor_enabled = False
+    user.two_factor_secret = None
+
+    db.session.commit()
+
+    write_audit_log(
+        user.username,
+        "Disabled 2FA"
+    )
+
+    return jsonify({
+        "message": "2FA disabled successfully"
+    })
+
+
+# =====================================================
+# DASHBOARD
+# =====================================================
 
 @app.route("/api/dashboard/stats", methods=["GET"])
 @login_required
 def dashboard_stats():
-
     total_users = User.query.count()
     total_logs = AuditLog.query.count()
 
-    write_audit_log(
-        session.get("username"),
-        "Viewed dashboard"
+    camera_status_value = (
+        "UNAVAILABLE"
+        if camera_service is None
+        else "ONLINE"
     )
 
     return jsonify({
-    "camera_status": "UNAVAILABLE" if camera_service is None else "ONLINE",
-    "online_cameras": 0 if camera_service is None else 1,
-    "active_users": total_users,
-    "total_logs": total_logs,
-    "devices": total_users
-})
+        "camera_status": camera_status_value,
+        "online_cameras": 0 if camera_service is None else 1,
+        "active_users": total_users,
+        "total_logs": total_logs,
+        "devices": total_users
+    })
 
 
+# =====================================================
 # CAMERA
-
+# =====================================================
 
 @app.route("/api/camera/stream")
 @login_required
 def camera_stream():
-
     write_audit_log(
         session.get("username"),
         "Accessed CCTV stream"
@@ -328,7 +617,6 @@ def camera_stream():
 @app.route("/api/camera/status", methods=["GET"])
 @login_required
 def camera_status():
-
     if camera_service is None:
         return jsonify({
             "camera": "Main CCTV Camera",
@@ -342,13 +630,14 @@ def camera_status():
         "status": "ONLINE" if is_online else "OFFLINE"
     })
 
-# LOGS
 
+# =====================================================
+# LOGS
+# =====================================================
 
 @app.route("/api/logs", methods=["GET"])
 @admin_required
 def get_logs():
-
     username = request.args.get("username", "")
     action = request.args.get("action", "")
 
@@ -389,7 +678,6 @@ def get_logs():
 @app.route("/api/logs/export", methods=["GET"])
 @admin_required
 def export_logs():
-
     logs = AuditLog.query.order_by(
         AuditLog.created_at.desc()
     ).all()
@@ -431,13 +719,13 @@ def export_logs():
     )
 
 
+# =====================================================
 # USERS
-
+# =====================================================
 
 @app.route("/api/users", methods=["GET"])
 @admin_required
 def get_users():
-
     users = User.query.order_by(
         User.created_at.desc()
     ).all()
@@ -449,6 +737,7 @@ def get_users():
             "email": user.email,
             "role": user.role,
             "is_active": user.is_active,
+            "two_factor_enabled": user.two_factor_enabled,
             "created_at": user.created_at.strftime("%Y-%m-%d %H:%M:%S")
         }
         for user in users
@@ -458,7 +747,6 @@ def get_users():
 @app.route("/api/users/<int:user_id>/disable", methods=["POST"])
 @admin_required
 def disable_user(user_id):
-
     user = User.query.get_or_404(user_id)
 
     if user.username == "admin":
@@ -483,7 +771,6 @@ def disable_user(user_id):
 @app.route("/api/users/<int:user_id>/delete", methods=["DELETE"])
 @admin_required
 def delete_user(user_id):
-
     user = User.query.get_or_404(user_id)
 
     if user.username == "admin":
@@ -509,7 +796,6 @@ def delete_user(user_id):
 @app.route("/api/users/<int:user_id>/reset-password", methods=["POST"])
 @admin_required
 def reset_user_password(user_id):
-
     data = request.get_json() or {}
 
     new_password = data.get("password", "")
@@ -538,13 +824,13 @@ def reset_user_password(user_id):
     })
 
 
+# =====================================================
 # SETTINGS
-
+# =====================================================
 
 @app.route("/api/settings/save", methods=["POST"])
 @admin_required
 def save_settings():
-    
     data = request.get_json() or {}
 
     auto_logout = data.get("auto_logout", "30")
@@ -557,24 +843,29 @@ def save_settings():
     return jsonify({
         "message": "Settings saved"
     })
-# INIT DATABASE ON STARTUP
-with app.app_context():
-    db.create_all()
 
+
+# =====================================================
 # INIT DB
+# =====================================================
 
-    
 @app.cli.command("init-db")
 def init_db():
     db.create_all()
     print("Database initialized successfully.")
 
+
+with app.app_context():
+    db.create_all()
+
+
+# =====================================================
 # RUN APP
+# =====================================================
 
 if __name__ == "__main__":
-
     app.run(
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 8000)),
         debug=False
-)
+    )
