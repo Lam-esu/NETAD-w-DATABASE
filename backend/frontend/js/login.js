@@ -38,13 +38,13 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("LOGIN RESPONSE:", data);
 
             if (response.ok) {
-                if (data.requires_2fa === true) {
-                    window.location.href = "/verify-2fa.html";
+                if (data.requires_2fa_setup === true) {
+                    window.location.href = "/setup-2fa.html";
                     return;
                 }
 
-                if (!data.user) {
-                    alert("Login response missing user data.");
+                if (data.requires_2fa === true) {
+                    window.location.href = "/verify-2fa.html";
                     return;
                 }
 

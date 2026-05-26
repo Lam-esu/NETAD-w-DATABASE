@@ -1285,3 +1285,23 @@ button:hover {
 body.is-admin .admin-only {
     display: block;
 }
+
+.twofa-instruction {
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.twofa-secret-box {
+    background: #26344f;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+
+    color: #e2e8f0;
+    font-size: 14px;
+    font-weight: 700;
+    word-break: break-all;
+}
