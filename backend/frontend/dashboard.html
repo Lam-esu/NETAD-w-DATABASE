@@ -3,15 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure CCTV Dashboard</title>
-
-    <script>
-        const savedRole = sessionStorage.getItem("userRole");
-
-        if (savedRole === "admin") {
-            document.documentElement.classList.add("is-admin");
-        }
-    </script>
+    <title>Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -39,83 +31,109 @@
             <li><a href="settings.html">Settings</a></li>
 
             <li>
-                <button id="logoutBtn" class="logout-btn">
-                    Logout
-                </button>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
             </li>
         </ul>
     </aside>
 
+<script src="js/auth.js?v=2"></script>
+
     <main class="main-content">
 
         <div class="page-header">
+
             <h1>Dashboard</h1>
-            <p>Overview of your CCTV monitoring system</p>
+
         </div>
 
         <div class="stats-grid">
 
-            <div class="stats-card">
-                <div class="card-icon blue">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 5h16v10H4V5Z"></path>
-                        <path d="M8 19h8"></path>
-                        <path d="M12 15v4"></path>
-                    </svg>
+            <div class="card">
+
+                <div class="card-icon">
+                    💻
                 </div>
 
-                <div class="card-info">
-                    <h4>DEVICES</h4>
-                    <h2 id="devicesCount">0</h2>
-                    <p>Devices with access</p>
+                <div>
+
+                    <h3>Devices</h3>
+
+                    <p id="devicesCount">
+                        
+                    </p>
+
+                    <span>
+                        Devices with access
+                    </span>
+
                 </div>
+
             </div>
 
-            <div class="stats-card">
+            <div class="card">
+
                 <div class="card-icon green">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 7h11v10H4V7Z"></path>
-                        <path d="M15 10l5-3v10l-5-3v-4Z"></path>
-                    </svg>
+                    📹
                 </div>
 
-                <div class="card-info">
-                    <h4>CAMERA STATUS</h4>
-                    <h2 id="cameraStatus">CHECKING</h2>
-                    <p>CCTV stream status</p>
+                <div>
+
+                    <h3>Camera Status</h3>
+
+                    <p id="cameraStatus">
+                        
+                    </p>
+
+                    <span>
+                        CCTV stream status
+                    </span>
+
                 </div>
+
             </div>
 
-            <div class="stats-card">
+            <div class="card">
+
                 <div class="card-icon purple">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"></path>
-                        <path d="M4 21a8 8 0 0 1 16 0"></path>
-                    </svg>
+                    👤
                 </div>
 
-                <div class="card-info">
-                    <h4>ACTIVE USERS</h4>
-                    <h2 id="activeUsers">0</h2>
-                    <p>Currently online</p>
+                <div>
+
+                    <h3>Active Users</h3>
+
+                    <p id="activeUsers">
+                        
+                    </p>
+
+                    <span>
+                        Currently online
+                    </span>
+
                 </div>
+
             </div>
 
-            <div class="stats-card">
+            <div class="card">
+
                 <div class="card-icon orange">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M6 3h9l3 3v15H6V3Z"></path>
-                        <path d="M9 10h6"></path>
-                        <path d="M9 14h6"></path>
-                        <path d="M9 18h4"></path>
-                    </svg>
+                    📋
                 </div>
 
-                <div class="card-info">
-                    <h4>LOGS TODAY</h4>
-                    <h2 id="logsToday">0</h2>
-                    <p>Total activity logs</p>
+                <div>
+
+                    <h3>Logs Today</h3>
+
+                    <p id="logsToday">
+                        
+                    </p>
+
+                    <span>
+                        Total activity logs
+                    </span>
+
                 </div>
+
             </div>
 
         </div>
@@ -156,9 +174,10 @@
 
 </div>
 
-<script src="js/auth.js"></script>
+<script src="js/auth.js?v=2"></script>
 <script src="js/dashboard.js"></script>
 
+</body>
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
     const cameraMessage = document.getElementById("cameraMessage");
@@ -236,11 +255,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (status === "ONLINE") {
             cameraMessage.style.display = "none";
-
             liveFeed.style.display = "block";
             liveFeed.src = "/api/camera/stream";
         } else {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
         }
 
     } catch (error) {
@@ -257,6 +276,4 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 </script>
-
-</body>
 </html>

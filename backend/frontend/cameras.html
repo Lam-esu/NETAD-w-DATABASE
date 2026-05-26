@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cameras</title>
 
-    <script>
-        const savedRole = sessionStorage.getItem("userRole");
-
-        if (savedRole === "admin") {
-            document.documentElement.classList.add("is-admin");
-        }
-    </script>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -122,8 +114,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         if (!response.ok) {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
-            cameraBadge.textContent = "● UNAVAILABLE";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
+
+            cameraBadge.textContent =
+                "● UNAVAILABLE";
 
             applyStatusColor("UNAVAILABLE");
             return;
@@ -141,14 +136,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             cameraFeed.style.display = "block";
             cameraFeed.src = "/api/camera/stream";
         } else {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
         }
 
     } catch (error) {
         console.error("Camera error:", error);
 
-        cameraMessage.textContent = "Camera unavailable in cloud deployment";
-        cameraBadge.textContent = "● UNAVAILABLE";
+        cameraMessage.textContent =
+            "Camera unavailable in cloud deployment";
+
+        cameraBadge.textContent =
+            "● UNAVAILABLE";
 
         applyStatusColor("UNAVAILABLE");
     }

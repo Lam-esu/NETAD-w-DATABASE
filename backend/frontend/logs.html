@@ -4,18 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audit Logs</title>
-
-    <script>
-        const savedRole = sessionStorage.getItem("userRole");
-
-        if (savedRole === "admin") {
-            document.documentElement.classList.add("is-admin");
-        }
-    </script>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
+<script src="js/auth.js"></script>
 <body>
 
 <div class="container">
@@ -39,9 +30,7 @@
             <li><a href="settings.html">Settings</a></li>
 
             <li>
-                <button id="logoutBtn" class="logout-btn">
-                    Logout
-                </button>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
             </li>
         </ul>
     </aside>
@@ -50,7 +39,7 @@
 
         <div class="page-header">
             <h1>Audit Logs</h1>
-            <p>Monitor user activity, login attempts, and security events</p>
+
         </div>
 
         <section class="logs-card">
@@ -58,17 +47,8 @@
             <div class="logs-toolbar">
 
                 <div class="logs-search">
-                    <input
-                        type="text"
-                        id="searchUsername"
-                        placeholder="Search username..."
-                    >
-
-                    <input
-                        type="text"
-                        id="searchAction"
-                        placeholder="Search action..."
-                    >
+                    <input type="text" id="searchUsername" placeholder="Search username...">
+                    <input type="text" id="searchAction" placeholder="Search action...">
 
                     <button id="searchBtn">
                         Search
@@ -99,7 +79,7 @@
 
                     <tbody id="logsTable">
                         <tr>
-                            <td colspan="4">Loading logs...</td>
+                         <td colspan="4">Loading logs...</td>
                         </tr>
                     </tbody>
                 </table>

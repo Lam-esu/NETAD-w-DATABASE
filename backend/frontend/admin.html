@@ -4,18 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-
-    <script>
-        const savedRole = sessionStorage.getItem("userRole");
-
-        if (savedRole === "admin") {
-            document.documentElement.classList.add("is-admin");
-        }
-    </script>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
+<script src="js/auth.js?v=2"></script>
 <body>
 
 <div class="container">
@@ -39,9 +30,7 @@
             <li><a href="settings.html">Settings</a></li>
 
             <li>
-                <button id="logoutBtn" class="logout-btn">
-                    Logout
-                </button>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
             </li>
         </ul>
     </aside>
@@ -50,7 +39,6 @@
 
         <div class="page-header">
             <h1>Admin Panel</h1>
-            <p>Manage users and security controls</p>
         </div>
 
         <div class="admin-grid">
@@ -59,57 +47,37 @@
                 <h2>Add User</h2>
 
                 <div class="admin-form">
-                    <input
-                        type="text"
-                        id="newUsername"
-                        placeholder="Username"
-                    >
-
-                    <input
-                        type="email"
-                        id="newEmail"
-                        placeholder="Email"
-                    >
-
-                    <input
-                        type="password"
-                        id="newPassword"
-                        placeholder="Password"
-                    >
-
+                    <input type="text" id="newUsername" placeholder="Username">
+                    <input type="email" id="newEmail" placeholder="Email">
+                    <input type="password" id="newPassword" placeholder="Password">
                     <select id="newRole">
                         <option value="user">User</option>
                         <option value="admin">Admin</option>
                     </select>
-
-                    <button id="addUserBtn">
-                        Add User
-                    </button>
+                    <button id="addUserBtn">Add User</button>
                 </div>
             </div>
 
             <div class="admin-card">
                 <h2>Existing Users</h2>
 
-                <div class="logs-table-wrapper">
-                    <table class="users-table">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
 
-                        <tbody id="usersTable">
-                            <tr>
-                                <td colspan="5">Loading users...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody id="usersTable">
+                        <tr>
+                            <td colspan="5">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>
@@ -118,7 +86,7 @@
 
 </div>
 
-<script src="js/auth.js"></script>
+<script src="js/auth.js?v=2"></script>
 <script src="js/admin.js"></script>
 
 </body>
