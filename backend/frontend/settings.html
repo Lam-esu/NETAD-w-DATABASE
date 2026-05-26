@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+
+    <script>
+        const savedRole = sessionStorage.getItem("userRole");
+
+        if (savedRole === "admin") {
+            document.documentElement.classList.add("is-admin");
+        }
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <h2>SECURE CCTV</h2>
+        <p class="sidebar-subtitle">MONITORING</p>
+
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="cameras.html">Cameras</a></li>
+
+            <li class="admin-only">
+                <a href="logs.html">Logs</a>
+            </li>
+
+            <li class="admin-only">
+                <a href="admin.html">Users</a>
+            </li>
+
+            <li><a class="active" href="settings.html">Settings</a></li>
+
+            <li>
+                <button id="logoutBtn" class="logout-btn">
+                    Logout
+                </button>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="page-header">
+            <h1>Settings</h1>
+            <p>Configure system security and session settings</p>
+        </div>
+
+        <div class="admin-grid">
+
+            <div class="admin-card">
+                <div class="admin-card-top">
+                    <div>
+                        <h2>Auto Logout</h2>
+                        <p>Automatically log users out after inactivity</p>
+                    </div>
+
+                    <select class="settings-select" id="autoLogout">
+                        <option value="15">15 minutes</option>
+                        <option value="30" selected>30 minutes</option>
+                        <option value="60">1 hour</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-top">
+                    <div>
+                        <h2>Security Mode</h2>
+                        <p>Enable strict access control and protected sessions</p>
+                    </div>
+
+                    <button id="saveSettings">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/settings.js"></script>
+
+</body>
+</html>

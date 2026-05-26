@@ -355,7 +355,6 @@ def login():
     if not user.two_factor_secret:
         session.clear()
         session["pending_2fa_setup_user_id"] = user.id
-        session.modified = True
 
         return jsonify({
             "message": "2FA setup required",
