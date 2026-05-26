@@ -1305,22 +1305,3 @@ body.is-admin .admin-only {
     font-weight: 700;
     word-break: break-all;
 }
-
-/* ROLE-BASED SIDEBAR DISPLAY */
-
-.admin-only {
-    display: none;
-}
-
-html.is-admin .admin-only {
-    display: block;
-}
-
-/* Prevent sidebar changing while logout is processing */
-body.logging-out {
-    pointer-events: none;
-}
-
-body.logging-out .container {
-    opacity: 0.75;
-}
