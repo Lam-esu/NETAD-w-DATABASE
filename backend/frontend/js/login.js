@@ -12,11 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const username = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value;
 
-        if (!username || !password) {
-            alert("Please enter your username and password.");
-            return;
-        }
-
         try {
             const response = await fetch("/api/auth/login", {
                 method: "POST",
@@ -30,24 +25,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             });
 
-            const data = await response.json();
+            let data = {};
+
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                console.error("Invalid JSON response:", jsonError);
+                alert("Server returned an invalid response.");
+                return;
+            }
 
             console.log("LOGIN RESPONSE:", data);
 
             if (response.ok) {
-                /*
-                    If 2FA is enabled for this account,
-                    redirect first to the 2FA verification page.
-                */
-                if (data.requires_2fa) {
+                if (data.requires_2fa === true) {
                     window.location.href = "/verify-2fa.html";
                     return;
                 }
 
-                /*
-                    Normal login without 2FA.
-                    Store role locally for faster sidebar loading.
-                */
+                if (!data.user) {
+                    alert("Login response missing user data.");
+                    return;
+                }
+
                 const role = String(data.user.role).trim().toLowerCase();
 
                 sessionStorage.setItem("userRole", role);
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (error) {
             console.error("Login error:", error);
-            alert("Server error. Check Railway or Flask terminal.");
+            alert("Server error. Check Railway logs.");
         }
     });
 });
