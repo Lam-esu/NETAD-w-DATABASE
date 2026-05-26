@@ -23,7 +23,7 @@ from security import (
 from camera import CameraService
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "frontend"))
 
 # =====================================================
 # LOAD ENV VARIABLES
