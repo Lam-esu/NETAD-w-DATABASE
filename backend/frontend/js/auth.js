@@ -41,9 +41,9 @@ function applyRole(role) {
     role = String(role).trim().toLowerCase();
 
     if (role === "admin") {
-        document.body.classList.add("is-admin");
+        document.documentElement.classList.add("is-admin");
     } else {
-        document.body.classList.remove("is-admin");
+        document.documentElement.classList.remove("is-admin");
     }
 
     const page = window.location.pathname;
@@ -76,8 +76,7 @@ function setupLogout() {
     if (!logoutBtn) return;
 
     logoutBtn.addEventListener("click", async function () {
-        sessionStorage.clear();
-        document.body.classList.remove("is-admin");
+        document.body.classList.add("logging-out");
 
         try {
             await fetch("/api/auth/logout", {
@@ -87,6 +86,9 @@ function setupLogout() {
         } catch (error) {
             console.error("Logout error:", error);
         }
+
+        sessionStorage.clear();
+        localStorage.clear();
 
         window.location.href = "/";
     });
