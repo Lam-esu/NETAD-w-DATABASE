@@ -1412,3 +1412,22 @@ body.is-admin .admin-only {
         grid-template-columns: 1fr;
     }
 }
+
+/* ROLE-BASED SIDEBAR FIX */
+
+.admin-only {
+    display: none;
+}
+
+html.is-admin .admin-only,
+body.is-admin .admin-only {
+    display: block;
+}
+
+body.logging-out {
+    pointer-events: none;
+}
+
+body.logging-out .container {
+    opacity: 0.75;
+}

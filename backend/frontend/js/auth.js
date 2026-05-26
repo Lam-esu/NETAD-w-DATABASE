@@ -42,8 +42,10 @@ function applyRole(role) {
 
     if (role === "admin") {
         document.documentElement.classList.add("is-admin");
+        document.body.classList.add("is-admin");
     } else {
         document.documentElement.classList.remove("is-admin");
+        document.body.classList.remove("is-admin");
     }
 
     const page = window.location.pathname;
