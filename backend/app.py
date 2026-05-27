@@ -116,7 +116,7 @@ limiter.init_app(app)
 # =====================================================
 
 camera_source = os.getenv("CAMERA_SOURCE", "")
-
+print("CAMERA_SOURCE LOADED:", camera_source)
 camera_service = (
     CameraService(camera_source)
     if camera_source

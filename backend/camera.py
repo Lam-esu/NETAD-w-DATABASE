@@ -1,5 +1,6 @@
 import cv2
 import time
+import os
 
 
 class CameraService:
@@ -7,10 +8,21 @@ class CameraService:
         self.source = int(source) if str(source).isdigit() else source
         self.camera = None
 
+        # Helps RTSP cameras like Tapo use TCP instead of UDP
+        os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;tcp"
+
     def connect(self):
-        if self.camera is None or not self.camera.isOpened():
-            self.camera = cv2.VideoCapture(self.source)
-        return self.camera.isOpened()
+        if self.camera is not None and self.camera.isOpened():
+            return True
+
+        self.camera = cv2.VideoCapture(self.source, cv2.CAP_FFMPEG)
+
+        if not self.camera.isOpened():
+            self.camera.release()
+            self.camera = None
+            return False
+
+        return True
 
     def generate_frames(self):
         while True:
@@ -22,8 +34,7 @@ class CameraService:
                 success, frame = self.camera.read()
 
                 if not success:
-                    self.camera.release()
-                    self.camera = None
+                    self.release()
                     time.sleep(2)
                     continue
 
@@ -36,8 +47,17 @@ class CameraService:
 
                 yield (
                     b"--frame\r\n"
-                    b"Content-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n"
+                    b"Content-Type: image/jpeg\r\n\r\n" +
+                    frame_bytes +
+                    b"\r\n"
                 )
 
-            except Exception:
+            except Exception as error:
+                print("Camera error:", error)
+                self.release()
                 time.sleep(2)
+
+    def release(self):
+        if self.camera is not None:
+            self.camera.release()
+            self.camera = None
