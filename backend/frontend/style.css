@@ -253,6 +253,13 @@ button:hover {
     font-size: 13px;
 }
 
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .sidebar ul {
     list-style: none;
     display: flex;
@@ -260,12 +267,25 @@ button:hover {
     height: 100%;
 }
 
-.sidebar li {
-    margin-bottom: 12px;
-}
-
 .sidebar li:last-child {
     margin-top: auto;
+    position: sticky;
+    bottom: 20px;
+}
+
+.logout-btn {
+    width: 100%;
+    background: rgba(255, 91, 91, 0.12);
+    color: #ff6b6b;
+
+    padding: 13px 18px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    text-align: left;
 }
 
 .sidebar a {
