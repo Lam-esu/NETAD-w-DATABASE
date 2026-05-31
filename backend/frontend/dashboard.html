@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         setInterval(reloadStream, 60000);
         imgElement.onerror = () => setTimeout(reloadStream, 3000);
     }
-    
+
     function applyStatusColor(status) {
         const normalizedStatus = String(status).trim().toUpperCase();
 
@@ -280,8 +280,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (status === "ONLINE") {
             cameraMessage.style.display = "none";
 
-            liveFeed.style.display = "block";
-            startCameraStream(liveFeed);
+            cameraPageFeed.style.display = "block";
+            startCameraStream(cameraPageFeed);
         } else {
             cameraMessage.textContent =
                 "Camera unavailable in cloud deployment";
