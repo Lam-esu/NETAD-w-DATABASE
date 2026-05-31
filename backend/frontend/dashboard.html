@@ -173,7 +173,7 @@
                 </div>
 
                 <img
-                    id="liveFeed"
+                    id="cameraPageFeed"
                     alt="Live CCTV Feed"
                     style="display: none;"
                 >
@@ -192,10 +192,19 @@
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
     const cameraMessage = document.getElementById("cameraMessage");
-    const liveFeed = document.getElementById("liveFeed");
+    const cameraPageFeed = document.getElementById("cameraPageFeed");
     const liveBadge = document.getElementById("liveBadge");
     const cameraStatus = document.getElementById("cameraStatus");
 
+    function startCameraStream(imgElement) {
+        function reloadStream() {
+            imgElement.src = "/api/camera/stream?t=" + Date.now();
+        }
+        reloadStream();
+        setInterval(reloadStream, 60000);
+        imgElement.onerror = () => setTimeout(reloadStream, 3000);
+    }
+    
     function applyStatusColor(status) {
         const normalizedStatus = String(status).trim().toUpperCase();
 
