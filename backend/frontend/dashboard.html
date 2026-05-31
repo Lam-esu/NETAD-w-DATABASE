@@ -213,6 +213,25 @@ document.addEventListener("DOMContentLoaded", async function () {
             );
         }
 
+    function startCameraStream(imgElement) {
+        function reloadStream() {
+            imgElement.src = "/api/camera/stream?t=" + Date.now();
+    }
+
+    reloadStream();
+
+            // If the stream freezes, refresh it automatically every 60 seconds
+    setInterval(function () {
+        reloadStream();
+    }, 60000);
+
+    imgElement.onerror = function () {
+        setTimeout(function () {
+            reloadStream();
+            }, 3000);
+        };
+    }
+
         if (normalizedStatus === "ONLINE") {
             liveBadge.classList.add("status-online");
 
@@ -272,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             cameraMessage.style.display = "none";
 
             liveFeed.style.display = "block";
-            liveFeed.src = "/api/camera/stream";
+            startCameraStream(liveFeed);
         } else {
             cameraMessage.textContent =
                 "Camera unavailable in cloud deployment";
