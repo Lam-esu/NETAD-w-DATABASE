@@ -1,66 +1,78 @@
+import os
 import cv2
 import time
-from flask import Flask, Response
+from flask import Flask, Response, abort, request
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-CAMERA_SOURCE = "rtsp://cctvuser:netadcctv1@192.168.1.50:554/stream2"
+CAMERA_SOURCE = os.getenv("CAMERA_SOURCE")
+RELAY_TOKEN = os.getenv("RELAY_TOKEN", "change-this-token")
 
-class CameraService:
-    def __init__(self, source):
-        self.source = source
-        self.camera = None
-
-    def connect(self):
-        if self.camera is None or not self.camera.isOpened():
-            self.camera = cv2.VideoCapture(self.source)
-        return self.camera.isOpened()
-
-    def generate_frames(self):
-        retry = 0
-        while True:
-            try:
-                if not self.connect():
-                    retry += 1
-                    time.sleep(min(1 * retry, 5))  # exponential backoff
-                    continue
-
-                success, frame = self.camera.read()
-                if not success or frame is None:
-                    if self.camera is not None:
-                        self.camera.release()
-                        self.camera = None
-                    retry += 1
-                    time.sleep(min(1 * retry, 5))
-                    continue
-
-                retry = 0
-                ret, buffer = cv2.imencode(".jpg", frame)
-                if not ret:
-                    continue
-
-                frame_bytes = buffer.tobytes()
-                yield (
-                    b"--frame\r\n"
-                    b"Content-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n"
-                )
-
-            except Exception:
-                if self.camera is not None:
-                    self.camera.release()
-                    self.camera = None
-                retry += 1
-                time.sleep(min(1 * retry, 5))
+os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;tcp"
 
 
-camera_service = CameraService(CAMERA_SOURCE)
+def generate_frames():
+    cap = cv2.VideoCapture(CAMERA_SOURCE, cv2.CAP_FFMPEG)
 
-@app.route("/api/camera/stream")
+    while True:
+        if not cap.isOpened():
+            cap.release()
+            time.sleep(2)
+            cap = cv2.VideoCapture(CAMERA_SOURCE, cv2.CAP_FFMPEG)
+            continue
+
+        success, frame = cap.read()
+
+        if not success:
+            cap.release()
+            time.sleep(2)
+            cap = cv2.VideoCapture(CAMERA_SOURCE, cv2.CAP_FFMPEG)
+            continue
+
+        ok, buffer = cv2.imencode(".jpg", frame)
+
+        if not ok:
+            continue
+
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n" +
+            buffer.tobytes() +
+            b"\r\n"
+        )
+
+
+@app.route("/camera-stream")
 def camera_stream():
+    token = request.args.get("token")
+
+    if token != RELAY_TOKEN:
+        abort(403)
+
     return Response(
-        camera_service.generate_frames(),
-        mimetype="multipart/x-mixed-replace; boundary=frame",
+        generate_frames(),
+        mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
+
+@app.route("/camera-status")
+def camera_status():
+    token = request.args.get("token")
+
+    if token != RELAY_TOKEN:
+        abort(403)
+
+    cap = cv2.VideoCapture(CAMERA_SOURCE, cv2.CAP_FFMPEG)
+    online = cap.isOpened()
+    cap.release()
+
+    return {
+        "status": "ONLINE" if online else "OFFLINE"
+    }
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5050)
+    app.run(host="127.0.0.1", port=5050, debug=False)
