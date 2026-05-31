@@ -96,6 +96,41 @@ document.addEventListener("DOMContentLoaded", async function () {
     const cameraFeed = document.getElementById("cameraPageFeed");
     const cameraBadge = document.getElementById("cameraPageBadge");
 
+    function startCameraStream(imgElement) {
+        let refreshTimer = null;
+        let retryTimer = null;
+
+        function reloadStream() {
+            imgElement.src = "/api/camera/stream?t=" + Date.now();
+        }
+
+        reloadStream();
+
+        refreshTimer = setInterval(function () {
+            reloadStream();
+        }, 60000);
+
+        imgElement.onerror = function () {
+            if (retryTimer) {
+                clearTimeout(retryTimer);
+            }
+
+            retryTimer = setTimeout(function () {
+                reloadStream();
+            }, 3000);
+        };
+
+        window.addEventListener("beforeunload", function () {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+            }
+
+            if (retryTimer) {
+                clearTimeout(retryTimer);
+            }
+        });
+    }
+
     function applyStatusColor(status) {
         const normalizedStatus = String(status).trim().toUpperCase();
 
@@ -121,8 +156,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         if (!response.ok) {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
-            cameraBadge.textContent = "● UNAVAILABLE";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
+
+            cameraBadge.textContent =
+                "● UNAVAILABLE";
 
             applyStatusColor("UNAVAILABLE");
             return;
@@ -138,16 +176,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             cameraMessage.style.display = "none";
 
             cameraFeed.style.display = "block";
-            cameraFeed.src = "/api/camera/stream";
+
+            startCameraStream(cameraFeed);
         } else {
-            cameraMessage.textContent = "Camera unavailable in cloud deployment";
+            cameraMessage.textContent =
+                "Camera unavailable in cloud deployment";
         }
 
     } catch (error) {
         console.error("Camera error:", error);
 
-        cameraMessage.textContent = "Camera unavailable in cloud deployment";
-        cameraBadge.textContent = "● UNAVAILABLE";
+        cameraMessage.textContent =
+            "Camera unavailable in cloud deployment";
+
+        cameraBadge.textContent =
+            "● UNAVAILABLE";
 
         applyStatusColor("UNAVAILABLE");
     }
