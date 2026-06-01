@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+backend/instance/
+instance/
+
+# Logs
+*.log
+logs/
+backend/*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node / frontend tooling if added later
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage and testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Uploaded local media / camera captures
+captures/
+recordings/
+*.mp4
+*.avi
+*.mov
+*.mkv
