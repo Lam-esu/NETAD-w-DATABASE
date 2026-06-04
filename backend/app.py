@@ -751,7 +751,7 @@ def get_logs():
             "action": log.action,
             "ip_address": log.ip_address,
             "user_agent": log.user_agent,
-            "created_at": log.created_at.strftime("%Y-%m-%d %H:%M:%S")
+            "created_at": log.created_at.isoformat() + "Z"
         }
         for log in logs
     ]), 200
@@ -818,7 +818,7 @@ def get_users():
             "email": user.email,
             "role": user.role,
             "is_active": user.is_active,
-            "created_at": user.created_at.strftime("%Y-%m-%d %H:%M:%S")
+            "created_at": user.created_at.isoformat() + "Z"
         }
         for user in users
     ]), 200
