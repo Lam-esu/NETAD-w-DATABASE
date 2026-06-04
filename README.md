@@ -105,10 +105,10 @@ pip install -r requirements.txt
 Do not commit this file.
 
 ```env
-SECRET_KEY=change-this-to-a-long-random-secret
-DATABASE_URL=sqlite:///instance/cctv.db
-CAMERA_SOURCE=rtsp://cctvuser:YOUR_CAMERA_PASSWORD@192.168.1.50:554/stream2
-RELAY_TOKEN=generate-a-long-random-token
+SECRET_KEY=
+DATABASE_URL=
+CAMERA_SOURCE=
+RELAY_TOKEN=
 ```
 
 Generate a secure relay token:
