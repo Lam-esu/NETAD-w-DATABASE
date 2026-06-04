@@ -129,7 +129,7 @@ function formatLocalTime(timestamp) {
 
     const date = new Date(timestamp);
 
-    return date.toLocaleString([], {
+    return date.toLocaleString("en-PH", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
