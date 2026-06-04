@@ -32,7 +32,7 @@ def generate_frames():
             cap = cv2.VideoCapture(CAMERA_SOURCE, cv2.CAP_FFMPEG)
             continue
 
-        ok, buffer = cv2.imencode(".jpg", frame)
+        ok, buffer = cv2.imencode(".jpg", frame,[cv2.IMWRITE_JPEG_QUALITY, 85])
 
         if not ok:
             continue
