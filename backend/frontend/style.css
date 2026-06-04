@@ -666,7 +666,7 @@ body.logging-out .container {
     width: 100%;
     height: clamp(420px, 60vh, 720px);
 
-    object-fit: cover;
+    object-fit: contain;
 
     border-radius: 14px;
 
