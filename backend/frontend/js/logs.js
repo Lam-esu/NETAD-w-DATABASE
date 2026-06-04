@@ -94,7 +94,7 @@ async function loadLogs() {
                 <td>${escapeHTML(log.username)}</td>
                 <td>${escapeHTML(log.action)}</td>
                 <td>${escapeHTML(log.ip_address)}</td>
-                <td>${escapeHTML(log.created_at)}</td>
+                <td>${escapeHTML(formatLocalTime(log.created_at))}</td>
             `;
 
             logsTable.appendChild(row);
@@ -129,7 +129,12 @@ function formatLocalTime(timestamp) {
 
     const date = new Date(timestamp);
 
+    if (isNaN(date.getTime())) {
+        return timestamp;
+    }
+
     return date.toLocaleString("en-PH", {
+        timeZone: "Asia/Manila",
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
